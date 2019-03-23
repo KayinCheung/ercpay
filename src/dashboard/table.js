@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import '../App.css';
-import container from 'react-bulma-components/lib/components/container';
-import table from 'react-bulma-components/lib/components/table';
+
 import TableTab from './table_tab.js';
-import level from 'react-bulma-components/lib/components/level'
-import pagination from 'react-bulma-components/lib/components/pagination'
+import { Link } from "react-router-dom";
+
 class Table extends Component {
 
   render() {
@@ -24,8 +23,8 @@ class Table extends Component {
         <tbody>
             <tr>
             <td>21/09/2018</td>
-            <td>Payment from ShoukoChan<br/>
-            Completed</td>
+            <td><Link to="/activity/payment">Payment from ShoukoChan<br/>
+            Completed</Link></td>
             <td>$76.29</td>
         </tr>
         <tr>

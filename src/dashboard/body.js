@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
-import container from 'react-bulma-components/lib/components/container';
-import tile from 'react-bulma-components/lib/components/tile';
-import box from 'react-bulma-components/lib/components/box';
-import button from 'react-bulma-components/lib/components/button';
-import section from 'react-bulma-components/lib/components/section';
 
-import columns from 'react-bulma-components/lib/components/columns';
 import Table from './table.js';
 
 class Dashboard extends Component {
@@ -19,36 +13,11 @@ class Dashboard extends Component {
       <div className="container" style={{width: 960}}>
       <div className="columns">
       <div className="column is-one-third">
-        <div className="box">
-        <h2 className="title">Funds Available</h2>
         
-        <p>Wallet Balance: 81 DAI</p>
-        <p>ERCPay Balance: 192 DAI</p>
-
-        <a className="button is-primary">Withdraw DAI</a>
-        </div>
-        
-        <div className="box">
-        <h2>Funds Receivable</h2> 
-        <p>81 DAI</p>
-   
-        <a className="button is-primary">View Receivables</a>
-
-        <p>Funds in escrow will be available to withdraw once your customer release funds, or 30 days after invoice payment.</p>    
-        </div>
-   
-        <div className="box">
-
-        <p className="title">Pay</p>
-        <p>Send payment for goods or services with buyer protection.</p>
-        <a className="button is-primary">Send Payment</a>
-</div>
-<div className="box">
-
-        <p className="title">Invoicing</p>
-        <p>Your customers can pay your invoice through the invoice link you send them.</p>
-        <a className="button is-primary">Create Invoice</a>
-        </div>
+        <FundsAvailable/>
+        <FundsReceivable/>
+        <SendPayment/>
+        <CreateInvoice/>
         </div>
         
         <div className="column">
@@ -64,6 +33,73 @@ class Dashboard extends Component {
         
         </section>
         
+    );
+  }
+}
+
+class FundsAvailable extends Component {
+
+  render() {
+    return (
+      <div className="box">
+        <p className="is-size-4 has-text-weight-semibold">Funds Available</p>
+        <br/>
+        <p>Wallet Balance: 81 DAI</p>
+        <p>ERCPay Balance: 192 DAI</p>
+        <br/>
+        <a className="button is-primary">Withdraw DAI</a>
+        </div>
+
+    );
+  }
+}
+
+class FundsReceivable extends Component {
+
+  render() {
+    return (
+      <div className="box">
+      <p className="is-size-4 has-text-weight-semibold">Funds Receivable</p> 
+      <br/>
+      <p>Funds Receivable: 81 DAI</p>
+   
+      <br/>
+      <a className="button is-primary">View Receivables</a>
+      </div>
+ 
+
+    );
+  }
+}
+
+class SendPayment extends Component {
+
+  render() {
+    return (
+      <div className="box">
+
+      <p className="is-size-4 has-text-weight-semibold">Payments</p><br/>
+      <p>Send payment for goods or services with buyer protection.</p><br/>
+      <a className="button is-primary">Send Payment</a>
+      </div>
+ 
+
+    );
+  }
+}
+
+class CreateInvoice extends Component {
+
+  render() {
+    return (
+      <div className="box">
+
+        <p className="is-size-4 has-text-weight-semibold">Invoicing</p><br/>
+        <p>Your customers can pay your invoice through the invoice link you send them.</p><br/>
+        <a className="button is-primary">Create Invoice</a>
+        </div>
+ 
+
     );
   }
 }

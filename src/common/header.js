@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Navbar from 'react-bulma-components/lib/components/navbar';
 import AddressDropdown from './address_dropdown.js'
+import { Link } from "react-router-dom";
 
 class Header extends Component {
 
@@ -12,7 +12,7 @@ class Header extends Component {
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation" >
         <div className="navbar-brand">
-          <a className="navbar-item" href="https://bulma.io">
+          <a className="navbar-item" href="/">
             <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"/>
           </a>
       

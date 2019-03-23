@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import '../App.css';
-import level from 'react-bulma-components/lib/components/level';
 
 class TableTab extends Component {
 
@@ -10,7 +9,7 @@ class TableTab extends Component {
       <nav className="level">
       <div className="level-left">
 <div className="level-item">
-<a className="link is-info">Transaction History</a>
+<p>Transaction History</p>
 </div>
 </div>
 </nav>
