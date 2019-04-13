@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import AddressDropdown from './address_dropdown.js'
+
 import { Link } from "react-router-dom";
+import Web3 from 'web3';
+
 
 class Header extends Component {
-
-    handleAddress = (address) => {
-        this.props.onAddressChange(address);
-    }
     
   render() {
     return (
@@ -44,8 +42,8 @@ class Header extends Component {
           </div>
         </div>
       
-            <a className="navbar-item">
-              Get Started
+            <a className="navbar-item" href="/dashboard">
+            Dashboard
             </a>
       
            
@@ -55,6 +53,9 @@ class Header extends Component {
             <div className="navbar-item">
               <AddressDropdown onAddressChange={this.handleAddress}/>
             </div>
+            <a className="navbar-item" href="/">
+             Logout
+            </a>
           </div>
         </div>
       </nav>
@@ -64,4 +65,46 @@ class Header extends Component {
 
 export default Header;
 
+class AddressDropdown extends Component {
+
+    constructor(props){
+        super(props)
+        this.state = {
+            address: ''
+        }
+    }
+
+    componentDidMount(){
+        if (window.ethereum) {
+            const web3 = new Web3(window.ethereum);
+            try { 
+               window.ethereum.enable().then(() => {
+                   // User has allowed account access to DApp...
+                  this.setState({address: web3.eth.accounts[0]})
+                  setInterval(() => {
+                    if (web3.eth.accounts[0] !== this.state.address) {
+                        window.location.reload();
+                    }
+                  }, 100);
+               });
+               
+            } catch(e) {
+               // User has denied account access to DApp...
+            }
+         }
+
+         else {
+            window.location.href = "/login";
+         }
+    }
+
+    render(){
+
+    return (
+        <div className="navbar-item">
+              {this.state.address}
+        </div>
+    );
+  }
+}
 

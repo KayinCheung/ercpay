@@ -1,18 +1,32 @@
 import React, { Component } from 'react';
 import '../App.css';
 
+import Header from '../common/header.js'
 
 class TransactionDetails extends Component {
 
   render() {
     const user = 'userrr';
     const amount = '217';
+    const role = 'Buyer';
+    let TransactionAction;
+    if (role === 'Buyer'){
+      TransactionAction = <TxActionBuyer/>
+    } else {
+      TransactionAction = <TxActionSeller/>
+    }
+
     return (
-        <div className="App">
+      <div>
+        <Header/>
         
-        
-      <section class="section">
+      <section className="section">
+      <div className="container" style={{width:790}}>
+      <a className="has-text-left" onClick={() => window.history.back()}>&larr; Back to Dashboard</a>
+      </div>
       
+      <br/>
+
       <div className="container box" style={{width:800}}>
       
       <nav className="level">
@@ -30,26 +44,64 @@ class TransactionDetails extends Component {
         </div>
         </nav>
         <hr></hr>
-        
+        <p className="has-text-centered is-size-3">217.50 DAI</p>
 
         <div className="columns">
-        <div className="column is-narrow"> 
-        <p>Payment from {user}</p>
-        <p>Amount: 217 DAI</p>
+
+        <div className="column has-text-left">
+       
+        <b>Payment from</b>
+        <p>{user}</p>
+        <p>88 completed payments</p>
         </div>
-        <div className="column"> 
-        <p>Transaction ID: 0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359</p>
-        <p>Etherscan Link</p>
+        <div className="column is-narrow"><br/>
+          <span className="icon">
+          <i className="fas fa-arrow-right"></i>
+          </span>
+          </div>
+        <div className="column has-text-right"> 
+        <b>Payment to</b>
+        <p>{user}</p>
+        <p>57 completed transactions</p>
         </div>
+        </div>
+
+        <div className="has-text-centered">
+        <b>Escrowed By</b>
+        <p>ERCPAY</p>
+        <p>1385 transactions escrowed</p>
+        </div>
+        <br/>
+        <div className="buttons is-centered">
+        <a className="button is-primary">
+          <span className="icon">
+          <i className="far fa-user"></i>
+          </span>
+          <span>View Buyer Profile</span>
+        </a>
+        <a className="button is-primary">
+          <span className="icon">
+          <i className="far fa-user"></i>
+          </span>
+          <span>View Seller Profile</span>
+        </a>
+        <a className="button is-primary">
+          <span className="icon">
+          <i className="far fa-user"></i>
+          </span>
+          <span>View Escrow Profile</span>
+        </a>
         </div>
 
         <hr></hr>
 
-        <p className="has-text-left">Payment Details</p><br/>
+        <b>Payment Details</b><br/><br/>
+
+
     
-        <table className="table is-borderless">
+        <table className="table">
           <tr>
-          <th>Gross Amount</th>
+          <th style={{width:150}}>Gross Amount</th>
           <td>{amount} DAI</td>
           </tr>
           <tr>
@@ -62,54 +114,33 @@ class TransactionDetails extends Component {
           <td>{amount-2} DAI</td>
           </tr>
 
-          <tr>
-          <th>Paid By</th>
-          <td>Buyer name<br/>
-          0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359<br/></td>
-          </tr>
-
-          <tr>
-          <th>Buyer info</th>
-          <td>description of buyer here, limit to 100 char</td>
-          </tr>
-
+          
           <tr>
           <th>Note from buyer</th>
-          <td>limit to 100 char</td>
+          <td>limit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 charlimit to 100 char</td>
           </tr>
           </table>
         <hr/>
+       
+       
         <p className="has-text-left">Transaction Status</p>
        <br/>
-        <a class="button is-primary is-large">
-          <span class="icon">
-          <i class="fas fa-plane"></i>
+       <p className="buttons is-centered">
+        <a className="button is-primary is-large">
+          <span className="icon">
+          <i className="fas fa-plane"></i>
           </span>
           <span>In Escrow</span>
         </a>
-        <hr/>
-        <p className="has-text-left">Transaction Action</p>
-       <br/>
-       <p class="buttons">
-        <a class="button is-info is-large">
-          <span class="icon">
-          <i class="fas fa-plane"></i>
-          </span>
-          <span>Refund</span>
-        </a>
-
-        <a class="button is-info is-large">
-          <span class="icon">
-          <i class="fas fa-plane"></i>
-          </span>
-          <span>Contact Us</span>
-        </a>
         </p>
+        <hr/>
+        {TransactionAction}
 
         </div>
    
         
         </section>
+      
         </div>
         
     );
@@ -117,3 +148,68 @@ class TransactionDetails extends Component {
 }
 
 export default TransactionDetails;
+
+
+class TxActionSeller extends Component {
+
+  render() {
+    return (
+      <div>
+      <p className="has-text-left">Transaction Action</p>
+      <br/>
+      <p className="buttons is-centered">
+      <a className="button is-primary">
+         <span className="icon">
+         <i class="fas fa-dollar-sign"></i>
+         </span>
+         <span>Claim Funds</span>
+       </a>
+       </p>
+     
+      <p className="buttons is-centered">
+     
+       <a className="button is-info">
+         <span className="icon">
+         <i class="fas fa-undo-alt"></i>
+         </span>
+         <span>Refund</span>
+       </a>
+
+       <a className="button is-info">
+         <span className="icon">
+         <i class="fas fa-phone"></i>
+         </span>
+         <span>Contact Us</span>
+       </a>
+       </p>
+      </div>
+    );
+  }
+}
+
+class TxActionBuyer extends Component {
+
+  render() {
+    return (
+      <div>
+      <p className="has-text-left">Transaction Action</p>
+      <br/>
+      <p className="buttons is-centered">
+      <a className="button is-primary">
+         <span className="icon">
+         <i class="fas fa-dollar-sign"></i>
+         </span>
+         <span>Release Funds</span>
+       </a>
+ 
+       <a className="button is-info">
+         <span className="icon">
+         <i class="fas fa-phone"></i>
+         </span>
+         <span>Contact Us</span>
+       </a>
+       </p>
+      </div>
+    );
+  }
+}
