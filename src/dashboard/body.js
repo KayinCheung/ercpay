@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 import Web3 from 'web3';
 
 import constants from '../common/constant.js'
-import returnTxMap from '../common/formula.js'
+import formula from '../common/formula.js'
+import _ from 'lodash'
 
 class Dashboard extends Component {
   constructor(props){
@@ -31,16 +32,15 @@ componentDidMount(){
                // User has allowed account access to DApp...
 
               //Load contract
-             const contract = web3.eth.contract(constants.abi).at(constants.address)
-              
+            const contract = web3.eth.contract(constants.abi).at(constants.address)
              //Get ETH balance of address
-             web3.eth.getBalance(web3.eth.accounts[0], (error, result) => {
+            web3.eth.getBalance(web3.eth.accounts[0], (error, result) => {
                 this.setState({balance: web3.fromWei(result, "ether").toNumber()})
              });
 
 
 
-             contract.EscrowFee.call(web3.eth.accounts[0], (error, result) => {
+            contract.EscrowFee.call(web3.eth.accounts[0], (error, result) => {
               this.setState({fee: result/10.0})
               console.log(`fee ${result}`)
             });
@@ -54,20 +54,24 @@ componentDidMount(){
             //Get length of customer ledger
             contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
               console.log(`customer ledger length ${result}`)
-              this.setState({customerLedgerLength: result});
+              this.setState({customerLedgerLength: parseInt(result)});
+              
             //Loop through customer ledger from the end of list, get individual transaction id
             for (let i = 0; i < this.state.customerLedgerLength; i++){
-              contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, result) => {
-                console.log(result)
+              contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
+                console.log(id)
 
                 //For individual transaction id, get the transaction from TransactionLedger
-                contract.getTransaction.call(result, (error, result) => {
-                  const tx = returnTxMap(result)
-                  console.log(tx);
+                contract.getTransaction.call(id, (error, result) => {
+                  const tx = formula.returnTxMap(id,result)
                   let newLedger = this.state.customerLedger;
                   newLedger.push(tx);
+                  
+                  //After loading the final tx, sort the tx array 
+                  if (newLedger.length === this.state.customerLedgerLength){
+                    newLedger = _.sortBy(newLedger, "id").reverse()
+                  }
                   this.setState({customerLedger: newLedger})
-                  //console.log(web3.fromWei(tx['value'], 'ether'))
                 })
               })
             }
@@ -76,18 +80,24 @@ componentDidMount(){
             //Get length of merchant ledger
             contract.getMerchantLedgerLength.call(web3.eth.accounts[0], (error, result) => {
               console.log(`merchant ledger length ${result}`)
-              this.setState({merchantLedgerLength: result});
+              this.setState({merchantLedgerLength: parseInt(result)});
             //Loop through merchant ledger from the end of list, get individual transaction id
             for (let i = 0; i < this.state.merchantLedgerLength; i++){
-              contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, result) => {
-                console.log(result)
+              contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, id) => {
+                console.log(id)
 
                 //For individual transaction id, get the transaction from TransactionLedger
-                contract.getTransaction.call(result, (error, result) => {
-                  const tx = returnTxMap(result)
+                contract.getTransaction.call(id, (error, result) => {
+                  const tx = formula.returnTxMap(id,result)
                   console.log(tx);
                   let newLedger = this.state.merchantLedger;
                   newLedger.push(tx);
+                  console.log(newLedger.length)
+                  console.log(this.state.merchantLedgerLength)
+                  if (newLedger.length === this.state.merchantLedgerLength){
+                    console.log("SORT TIME")
+                    newLedger = _.sortBy(newLedger, "id").reverse()
+                  }
                   this.setState({merchantLedger: newLedger})
                   //console.log(web3.fromWei(tx['value'], 'ether'))
                 })
@@ -133,7 +143,7 @@ componentDidMount(){
       <div className="column is-one-third">
         
         <FundsAvailable balance={this.state.balance}/>
-        <FundsReceivable funds={this.state.funds}/>
+        <FundsReceivable funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
         <Profile/>
         <SendPayment/>
         <CreateInvoice/>
@@ -202,12 +212,16 @@ class FundsReceivable extends Component {
       <p className="is-size-4 has-text-weight-semibold">ERCPay Funds</p> 
       <br/>
       <p className="is-size-3">{this.props.funds} ETH</p>
-   
       <br/>
-      <a className="button is-primary">Withdraw Funds</a>
+      <a className="button is-primary" onClick={() => {
+        this.props.contract.withdraw.sendTransaction({
+          from: this.props.address
+        },
+        (error, result) => {
+          console.log(result)
+        })}}>
+        Withdraw Funds</a>
       </div>
- 
-
     );
   }
 }

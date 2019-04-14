@@ -11,3 +11,7 @@
 .App-link {
   color: #61dafb;
 }
+
+.modal-content {
+  width: 850px !important
+}

@@ -22,8 +22,8 @@ class Table extends Component {
       for (let i = 0; i < this.props.customerLedger.length; i++){
         tableRows.push(
           <tr>
-            <td>21/09/2018</td>
-            <td>Payment to {this.props.customerLedger[i]['seller']}<br/>
+            <td>{this.props.customerLedger[i]['id']}</td>
+            <td>Payment to <br/>{this.props.customerLedger[i]['seller']}<br/>
             {this.props.customerLedger[i]['status']}
             </td>
             <td>{this.props.customerLedger[i]['value']} ETH</td>
@@ -34,8 +34,8 @@ class Table extends Component {
       for (let i = 0; i < this.props.merchantLedger.length; i++){
         tableRows.push(
           <tr>
-            <td>21/09/2018</td>
-            <td>Payment from {this.props.merchantLedger[i]['buyer']}<br/>
+            <td>{this.props.merchantLedger[i]['id']}</td>
+            <td>Payment from <br/>{this.props.merchantLedger[i]['buyer']}<br/>
             {this.props.merchantLedger[i]['status']}
             </td>
             <td>{this.props.merchantLedger[i]['value']} ETH</td>
