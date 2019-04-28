@@ -23,7 +23,7 @@ class Fees extends Component {
             <div class="tabs is-boxed is-centered main-menu" id="nav">
                 <ul>
                     <li data-target="pane-1" id="1">
-                        <a>
+                        <a href="/">
                             <span class="icon is-small"><i class="fa fa-image"></i></span>
                             <span>Home</span>
                         </a>
@@ -34,18 +34,7 @@ class Fees extends Component {
                             <span>Fees & Rebate</span>
                         </a>
                     </li>
-                    <li data-target="pane-3" id="3">
-                        <a>
-                            <span class="icon is-small"><i class="fab fa-superpowers"></i></span>
-                            <span>Buyer Security</span>
-                        </a>
-                    </li>
-                    <li data-target="pane-4" id="4">
-                        <a>
-                            <span class="icon is-small"><i class="fa fa-film"></i></span>
-                            <span>Seller Security</span>
-                        </a>
-                    </li>
+                    
                 </ul>
             </div>
             
@@ -53,28 +42,58 @@ class Fees extends Component {
     <div class="content container" style={{width:800}}>
     <br/>
     <h1>Seller Fees</h1>
-    <p>Flat 1.5% fee for all transactions.</p>
+    <p>Flat 1% fee for all transactions.</p>
 
-
-    <h1>Rebate</h1>
-    <p>If buyer released funds to seller within 30 days of transaction, buyer and seller each receive 0.25% rebate on the transaction amount.</p>
-
-    <h3>Example</h3>
-    <p>Buyer pays 1000 DAI<br/>
-    Buyer releases payment on the 29th day after payment<br/>
-    Buyer receives 2.5 DAI rebate<br/>
-    Seller receives 985 DAI after fees, plus 2.5 DAI rebate for a total of 987.5 DAI</p>
-
+    <h1>Buyer Fees</h1>
+    <p>None. Gas fees from creating transactions on the blockchain only, usually less than 1 cent.</p>
 
     <h1>Escrow duration</h1>
-    <p>Funds from buyer are held in escrow and will be automatically released 30 days after the transaction is made, or buyer released funds early.</p>
-    <p>If buyer raised dispute, funds will be held in escrow until issue is resolved.</p>
+    <p>Funds from buyer are held in escrow once transaction is created.
+    Buyer should release funds after confirming receiving of working product.</p>
+    
+    <h1></h1>
 
 
     <h1>Dispute resolution</h1>
-    <p>Buyers can raise a dispute before 30 days since transaction was made if item has not arrived, or did not arrive as described.</p>
-    </div>
+    <p>Buyers should raise a dispute if item has not arrived in 30 days, or did not arrive as described.<br/>
+    Sellers should raise a dispute if buyer refuses to release funds after 30 days and the product is received.</p>
+
+    <br/>
+    We will review evidence provided by both parties and get in touch. 
+    We may require proof of address before starting the dispute resolution process;
+     it involves sending an empty message (or sending a 0 Ether transaction) to an address we specify.
+
+    <h1>Transaction process</h1>
+    For stronger protection against fradulent buyers and sellers, please involve ERCPAY in your conversations with the buyer or seller.
+    <br/>
+    <br/>
+    <h4>If you are communicating by email</h4>
+    CC evidence@ercpay.com in all emails
+    <br/>
+    <br/>
+    <h4>If you are communicating on Reddit</h4>
+    Create a group chat, and add /u/ERCPAY_Kayin
+
+    <br/>
+    <br/>
+    <h4>If you are communicating on Discord</h4>
+    Create a group chat, and add ERCPAY#8989
+
     
+    <br/>
+    <br/>
+    <h4>If you are communicating on other channels</h4>
+    If it has a group chat feature, let us know and we will create an account. Contact us at support@ercpay.com
+
+
+<br/><br/>
+    This allows us to get a full transcript of evidence and greatly accelerates the dispute resolution process.
+
+    </div>
+    <br/>
+    
+    <br/>
+    <br/>
     </div>
     );
   }

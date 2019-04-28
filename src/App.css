@@ -15,3 +15,7 @@
 .modal-content {
   width: 850px !important
 }
+
+.bg-lb{
+  background-color: rgb(245,247,250);
+}

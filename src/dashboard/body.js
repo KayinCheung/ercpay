@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 import Web3 from 'web3';
 
 import constants from '../common/constant.js'
-import formula from '../common/formula.js'
+import util from '../common/util.js'
+import TxConfirmation from '../common/txconfirmation.js'
 import _ from 'lodash'
 
 class Dashboard extends Component {
@@ -20,11 +21,18 @@ class Dashboard extends Component {
         merchantLedger: [],
         customerLedgerLength: 0,
         merchantLedgerLength: 0,
-        funds: 'Loading...'
+        funds: 'Loading...',
+
+        profileName: 'Loading...',
+        profileInfo: 'Loading...',
+
+        customerLedgerName: [],
+        merchantLedgerName: []
     }
 }
 
 componentDidMount(){
+  
     if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
         try { 
@@ -33,6 +41,8 @@ componentDidMount(){
 
               //Load contract
             const contract = web3.eth.contract(constants.abi).at(constants.address)
+            const profile_contract = web3.eth.contract(constants.profile_abi).at(constants.profile_address)
+            
              //Get ETH balance of address
             web3.eth.getBalance(web3.eth.accounts[0], (error, result) => {
                 this.setState({balance: web3.fromWei(result, "ether").toNumber()})
@@ -40,38 +50,67 @@ componentDidMount(){
 
 
 
+             //get the profile info of address
+            profile_contract.getProfileLength.call(web3.eth.accounts[0], (error, result) => {
+              //console.log(`Length of profile info ${result}`);
+              if (parseInt(result) === 0){
+                this.setState({
+                  profileName: 'Please set your profile',
+                  profileInfo: 'to use ERCPay'
+                })
+                return
+              }
+              //Then load profile info. Get last profile from array 
+              profile_contract.ProfileDB.call(web3.eth.accounts[0], (result - 1), (error, result) => {
+                this.setState({
+                  profileName: result[0],
+                  profileInfo: result[1]
+                })
+              })
+            })
+
+
+
+
             contract.EscrowFee.call(web3.eth.accounts[0], (error, result) => {
               this.setState({fee: result/10.0})
-              console.log(`fee ${result}`)
+              //console.log(`fee ${result}`)
             });
 
             
             contract.Funds.call(web3.eth.accounts[0], (error, result) => {
               this.setState({funds: result/(10**18)})
-              console.log(`funds ${result}`)
+              //console.log(`funds ${result}`)
             });
 
             //Get length of customer ledger
             contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
-              console.log(`customer ledger length ${result}`)
+              //console.log(`customer ledger length ${result}`)
               this.setState({customerLedgerLength: parseInt(result)});
               
             //Loop through customer ledger from the end of list, get individual transaction id
             for (let i = 0; i < this.state.customerLedgerLength; i++){
               contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
-                console.log(id)
+                //console.log(id)
 
                 //For individual transaction id, get the transaction from TransactionLedger
                 contract.getTransaction.call(id, (error, result) => {
-                  const tx = formula.returnTxMap(id,result)
+
+                  const tx = util.returnTxMap(id,result)
                   let newLedger = this.state.customerLedger;
                   newLedger.push(tx);
                   
+
+                  this.setState({customerLedger: newLedger})
+
                   //After loading the final tx, sort the tx array 
                   if (newLedger.length === this.state.customerLedgerLength){
-                    newLedger = _.sortBy(newLedger, "id").reverse()
+                   // newLedger = _.sortBy(newLedger, "id").reverse()
+                    //Run another function to add names to the transaction array object
+                    this.setState({customerLedger: newLedger})
+                    this.loadSellerUserNames(newLedger)
+                    
                   }
-                  this.setState({customerLedger: newLedger})
                 })
               })
             }
@@ -79,27 +118,33 @@ componentDidMount(){
 
             //Get length of merchant ledger
             contract.getMerchantLedgerLength.call(web3.eth.accounts[0], (error, result) => {
-              console.log(`merchant ledger length ${result}`)
+              //console.log(`merchant ledger length ${result}`)
               this.setState({merchantLedgerLength: parseInt(result)});
             //Loop through merchant ledger from the end of list, get individual transaction id
             for (let i = 0; i < this.state.merchantLedgerLength; i++){
               contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, id) => {
-                console.log(id)
+                //console.log(id)
 
                 //For individual transaction id, get the transaction from TransactionLedger
                 contract.getTransaction.call(id, (error, result) => {
-                  const tx = formula.returnTxMap(id,result)
-                  console.log(tx);
+                  const tx = util.returnTxMap(id,result)
+                  //console.log(tx);
                   let newLedger = this.state.merchantLedger;
                   newLedger.push(tx);
-                  console.log(newLedger.length)
-                  console.log(this.state.merchantLedgerLength)
-                  if (newLedger.length === this.state.merchantLedgerLength){
-                    console.log("SORT TIME")
-                    newLedger = _.sortBy(newLedger, "id").reverse()
-                  }
+                  //console.log(newLedger.length)
+                  //console.log(this.state.merchantLedgerLength)
+
                   this.setState({merchantLedger: newLedger})
-                  //console.log(web3.fromWei(tx['value'], 'ether'))
+                  if (newLedger.length === this.state.merchantLedgerLength){
+                    //console.log("SORT TIME")
+                    
+                    //Run another function to add names to the transaction array object
+                    this.setState({merchantLedger: newLedger})
+                    
+                    this.loadBuyerUserNames(newLedger)
+                    
+                  }
+                  ////console.log(web3.fromWei(tx['value'], 'ether'))
                 })
               })
             }
@@ -109,7 +154,8 @@ componentDidMount(){
             //Save state
              this.setState({
               address: web3.eth.accounts[0],
-              contract: contract
+              contract: contract,
+              profile_contract: profile_contract
             })
 
             //On address change, reload page.
@@ -130,12 +176,86 @@ componentDidMount(){
      }
 }
 
+
+  loadSellerUserNames(txs){
+    for (let i = 0; i < txs.length; i++){
+
+    //get the profile info of address
+    this.state.profile_contract.getProfileLength.call(txs[i].seller, (error, result) => {
+    //console.log(`Length of profile info ${result}`);
+    if (parseInt(result) === 0)
+      {
+        txs[i].sellerName = '';
+        let a = this.state.customerLedgerName.push(txs[i])
+        console.log(a)
+      }
+    
+    else {
+    //Then load profile info. Get last profile from array 
+    this.state.profile_contract.ProfileDB.call(txs[i].seller, (result - 1), (error, result) => {
+      txs[i].sellerName = result[0]
+      let a = this.state.customerLedgerName
+      a.push(txs[i])
+      this.setState({
+        customerLedgerName: a
+      })
+      if (this.state.customerLedgerName.length === this.state.customerLedgerLength){
+        let newLedger = _.sortBy(this.state.customerLedgerName, "id").reverse()
+        this.setState({
+          customerLedgerName: newLedger
+        })
+      }  
+    })
+    }
+
+    })
+  }
+}
+
+
+loadBuyerUserNames(txs){
+  for (let i = 0; i < txs.length; i++){
+
+  //get the profile info of address
+  this.state.profile_contract.getProfileLength.call(txs[i].buyer, (error, result) => {
+  //console.log(`Length of profile info ${result}`);
+  if (parseInt(result) === 0)
+    {
+      txs[i].buyerName = '';
+      let a = this.state.merchantLedgerName.push(txs[i])
+      console.log(a)
+    }
+  
+  else {
+  //Then load profile info. Get last profile from array 
+  this.state.profile_contract.ProfileDB.call(txs[i].buyer, (result - 1), (error, result) => {
+    txs[i].buyerName = result[0]
+    let a = this.state.merchantLedgerName
+    a.push(txs[i])
+    this.setState({
+      merchantLedgerName: a
+    })
+
+    if (this.state.merchantLedgerName.length === this.state.merchantLedgerLength){
+      let newLedger = _.sortBy(this.state.merchantLedgerName, "id").reverse()
+      this.setState({
+        merchantLedgerName: newLedger
+      })
+    }
+  })
+  }
+
+  })
+}
+}
+
+
   render() {
 
     return (
       <div>
       <Header/>
-      <section class="section">
+      <section className="section">
       
      
       <div className="container" style={{width: 960}}>
@@ -143,10 +263,9 @@ componentDidMount(){
       <div className="column is-one-third">
         
         <FundsAvailable balance={this.state.balance}/>
-        <FundsReceivable funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
-        <Profile/>
+        <WithdrawFunds funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
+        <Profile profileName={this.state.profileName} profileInfo={this.state.profileInfo} address={this.state.address}/>
         <SendPayment/>
-        <CreateInvoice/>
         </div>
         
         <div className="column">
@@ -157,8 +276,29 @@ componentDidMount(){
 
 
        
-        <Table customerLedger={this.state.customerLedger} merchantLedger={this.state.merchantLedger}/>
+        <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'sent'}/>
+        <br/>
+        <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
+        <a className="pagination-previous">Previous</a>
+        <a className="pagination-next">Next page</a>
+  
+        </nav>
         </div>
+
+
+        <div className="box">
+
+
+       
+        <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'received'}/>
+        <br/>
+        <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
+        <a className="pagination-previous">Previous</a>
+        <a className="pagination-next">Next page</a>
+  
+        </nav>
+        </div>
+
         </div>
         </div>
         </div>
@@ -173,15 +313,18 @@ componentDidMount(){
 class Profile extends Component {
 
   render() {
+    const profile_link = `/profile/${this.props.address}`
     return (
       <div className="box">
         <p className="is-size-4 has-text-weight-semibold">Your Profile</p>
         <br/>
-        <p>Username222</p>
-        <p>Optional Description</p>
-        <p>Update profile</p>
+        <p>{this.props.profileName}</p>
+        <p>{this.props.profileInfo}</p>
         <br/>
+        <p className="buttons is-centered">
         <a className="button is-primary" href="/activity/set_profile">Update Profile</a>
+        <a className="button is-primary" href={profile_link}>View Profile</a>
+        </p>
         </div>
 
     );
@@ -204,9 +347,12 @@ class FundsAvailable extends Component {
   }
 }
 
-class FundsReceivable extends Component {
+class WithdrawFunds extends Component {
+
 
   render() {
+
+
     return (
       <div className="box">
       <p className="is-size-4 has-text-weight-semibold">ERCPay Funds</p> 
@@ -218,7 +364,9 @@ class FundsReceivable extends Component {
           from: this.props.address
         },
         (error, result) => {
-          console.log(result)
+          
+
+          //console.log(result)
         })}}>
         Withdraw Funds</a>
       </div>
@@ -249,7 +397,7 @@ class CreateInvoice extends Component {
       <div className="box">
 
         <p className="is-size-4 has-text-weight-semibold">Invoicing</p><br/>
-        <p>Your customers can pay your invoice through the invoice link you send them.</p><br/>
+        <p>Your customers can pay you through the invoice link you send them.</p><br/>
         <a className="button is-primary">Create Invoice</a>
         </div>
  
@@ -257,5 +405,7 @@ class CreateInvoice extends Component {
     );
   }
 }
+
+
 
 export default Dashboard;

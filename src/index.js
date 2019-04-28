@@ -29,12 +29,14 @@ ReactDOM.render(
     <Route path="/fees" exact component={Fees} />
     <Route path="/login" exact component={Login} />
 
-    <Route path="/activity/payment" exact component={TransactionDetails} />
+    <Route path="/activity/transaction/:type/:id" exact component={TransactionDetails} />
     <Route path="/activity/send_payment" exact component={SendPayment} />
     <Route path="/activity/confirm_payment" exact component={SendPaymentConfirm} />
     <Route path="/activity/set_profile" exact component={SetProfile} />
 
-    <Route path="/profile" exact component={ProfilePage} />
+    <Route path="/profile/:address" exact component={ProfilePage} />
+
+
 
 
 
