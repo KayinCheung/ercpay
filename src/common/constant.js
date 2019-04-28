@@ -588,7 +588,7 @@ const abi = [
 	}
 ]
 
-const page_size = 10;
+const page_size = 5;
 module.exports = {
 	address:address, abi:abi, escrowAddress: escrowAddress,
 	profile_abi: profile_abi, profile_address: profile_address,

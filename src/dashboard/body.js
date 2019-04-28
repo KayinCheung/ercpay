@@ -27,11 +27,17 @@ class Dashboard extends Component {
         profileInfo: 'Loading...',
 
         customerLedgerName: [],
-        merchantLedgerName: []
+        merchantLedgerName: [],
+
+        customerStart: 0,
+        merchantStart: 0,
+        customerEnd: 0,
+        merchantEnd: 0
     }
 }
 
 componentDidMount(){
+
   
     if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
@@ -42,6 +48,12 @@ componentDidMount(){
               //Load contract
             const contract = web3.eth.contract(constants.abi).at(constants.address)
             const profile_contract = web3.eth.contract(constants.profile_abi).at(constants.profile_address)
+            //Save state
+            this.setState({
+              address: web3.eth.accounts[0],
+              contract: contract,
+              profile_contract: profile_contract
+            })
             
              //Get ETH balance of address
             web3.eth.getBalance(web3.eth.accounts[0], (error, result) => {
@@ -69,9 +81,6 @@ componentDidMount(){
               })
             })
 
-
-
-
             contract.EscrowFee.call(web3.eth.accounts[0], (error, result) => {
               this.setState({fee: result/10.0})
               //console.log(`fee ${result}`)
@@ -83,45 +92,27 @@ componentDidMount(){
               //console.log(`funds ${result}`)
             });
 
-            //Get length of customer ledger
-            contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
-              //console.log(`customer ledger length ${result}`)
-              this.setState({customerLedgerLength: parseInt(result)});
-              
-            //Loop through customer ledger from the end of list, get individual transaction id
-            for (let i = 0; i < this.state.customerLedgerLength; i++){
-              contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
-                //console.log(id)
-
-                //For individual transaction id, get the transaction from TransactionLedger
-                contract.getTransaction.call(id, (error, result) => {
-
-                  const tx = util.returnTxMap(id,result)
-                  let newLedger = this.state.customerLedger;
-                  newLedger.push(tx);
-                  
-
-                  this.setState({customerLedger: newLedger})
-
-                  //After loading the final tx, sort the tx array 
-                  if (newLedger.length === this.state.customerLedgerLength){
-                   // newLedger = _.sortBy(newLedger, "id").reverse()
-                    //Run another function to add names to the transaction array object
-                    this.setState({customerLedger: newLedger})
-                    this.loadSellerUserNames(newLedger)
-                    
-                  }
-                })
-              })
-            }
+          //Get length of customer ledger
+          this.state.contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
+            //console.log(`customer ledger length ${result}`)
+            this.setState({
+              customerLedgerLength: parseInt(result),
+              customerStart: parseInt(result) - 1,
             });
+
+            this.loadCustomerLedger()
+            })
 
             //Get length of merchant ledger
             contract.getMerchantLedgerLength.call(web3.eth.accounts[0], (error, result) => {
               //console.log(`merchant ledger length ${result}`)
-              this.setState({merchantLedgerLength: parseInt(result)});
+              this.setState({
+                merchantLedgerLength: parseInt(result),
+                merchantStart: parseInt(result) - 1,
+                merchantEnd: parseInt(result) - 1 - constants.page_size
+              });
             //Loop through merchant ledger from the end of list, get individual transaction id
-            for (let i = 0; i < this.state.merchantLedgerLength; i++){
+            for (let i = this.state.merchantLedgerLength -1 ; i >= 0 ; i++){
               contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, id) => {
                 //console.log(id)
 
@@ -151,12 +142,6 @@ componentDidMount(){
             });
 
 
-            //Save state
-             this.setState({
-              address: web3.eth.accounts[0],
-              contract: contract,
-              profile_contract: profile_contract
-            })
 
             //On address change, reload page.
               setInterval(() => {
@@ -176,30 +161,77 @@ componentDidMount(){
      }
 }
 
+  loadCustomerLedger(){
+    const web3 = new Web3(window.ethereum);
+    this.setState({
+      customerEnd: (this.state.customerStart + 1 - constants.page_size) < 0 ? 0 : (this.state.customerStart + 1 - constants.page_size)
+    })
+    console.log(this.state.customerStart)
+    console.log(this.state.customerEnd)
+    
+    //Loop through customer ledger from the end of list, get individual transaction id
+    this.setState({
+    customerLedger: [],
+    customerLedgerName: []
+  })
+    
+    for (let i = this.state.customerStart; i >= this.state.customerEnd; i--){
+      this.state.contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
+        //console.log(id)
 
-  loadSellerUserNames(txs){
-    for (let i = 0; i < txs.length; i++){
+        //For individual transaction id, get the transaction from TransactionLedger
+        this.state.contract.getTransaction.call(id, (error, result) => {
+
+          const tx = util.returnTxMap(id,result)
+          let newLedger = this.state.customerLedger;
+          newLedger.push(tx);
+          
+
+          //After loading the final tx, sort the tx array 
+          if (newLedger.length === (1 + this.state.customerStart - this.state.customerEnd)){
+            //console.log(newLedger.length)
+            // newLedger = _.sortBy(newLedger, "id").reverse()
+            //Run another function to add names to the transaction array object
+            this.setState({customerLedger: newLedger})
+            console.log('load name' + newLedger.length)
+            console.log(this.state.customerStart)
+            console.log(this.state.customerEnd)
+            this.loadSellerUserNames()
+            
+          }
+        })
+      })
+    }
+            
+  }
+
+
+  loadSellerUserNames(){
+    console.log('tx len' + this.state.customerLedger.length)
+   // console.log(txs)
+    for (let i = 0; i < this.state.customerLedger.length; i++){
 
     //get the profile info of address
-    this.state.profile_contract.getProfileLength.call(txs[i].seller, (error, result) => {
+    this.state.profile_contract.getProfileLength.call(this.state.customerLedger[i].seller, (error, result) => {
     //console.log(`Length of profile info ${result}`);
     if (parseInt(result) === 0)
       {
-        txs[i].sellerName = '';
-        let a = this.state.customerLedgerName.push(txs[i])
+        this.state.customerLedger[i].sellerName = '';
+        let a = this.state.customerLedgerName.push(this.state.customerLedger[i])
         console.log(a)
       }
     
     else {
     //Then load profile info. Get last profile from array 
-    this.state.profile_contract.ProfileDB.call(txs[i].seller, (result - 1), (error, result) => {
-      txs[i].sellerName = result[0]
+    this.state.profile_contract.ProfileDB.call(this.state.customerLedger[i].seller, (result - 1), (error, result) => {
+      this.state.customerLedger[i].sellerName = result[0]
       let a = this.state.customerLedgerName
-      a.push(txs[i])
+      a.push(this.state.customerLedger[i])
       this.setState({
         customerLedgerName: a
       })
-      if (this.state.customerLedgerName.length === this.state.customerLedgerLength){
+      console.log('setname runs')
+      if (this.state.customerLedgerName.length === this.state.customerLedger.length){
         let newLedger = _.sortBy(this.state.customerLedgerName, "id").reverse()
         this.setState({
           customerLedgerName: newLedger
@@ -251,6 +283,8 @@ loadBuyerUserNames(txs){
 
 
   render() {
+   // console.log(this.state.customerLedger)
+   // console.log(this.state.customerLedgerName)
 
     return (
       <div>
@@ -280,7 +314,7 @@ loadBuyerUserNames(txs){
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
         <a className="pagination-previous">Previous</a>
-        <a className="pagination-next">Next page</a>
+        <button className="button pagination-next">Next page</button>
   
         </nav>
         </div>

@@ -325,7 +325,8 @@ class SendPaymentConfirm extends Component {
         escrowTxCount: '',
         buyerName: '',
         sellerName: '',
-        escrowName: ''
+        escrowName: '',
+        txt: 'Confirm and Send payment'
     }
     this.loadProfileName = this.loadProfileName.bind(this)
     this.loadCount = this.loadCount.bind(this)
@@ -368,21 +369,25 @@ componentWillReceiveProps(){
 }
 
 SendPayment(){
-    console.log(this.props.address)
-    console.log(constants.escrowAddress)
-   
 
   this.state.contract.createPayment.sendTransaction(
-    this.props.selleraddress,
+    this.props.sellerAddress,
     constants.escrowAddress,
-    '', //notes. leave empty for now
+    'a', //notes. leave empty for now
     {
       from: this.props.address,
-      value: this.props.ethAmount*(10**18)
+      value: this.props.ethAmount*(10**18),
+      gas: 350000
     },
 
     (error, result) => {
       console.log(result)
+      this.setState({
+          txt: 'Payment Sent'
+      })
+      setInterval(() => {
+        window.location.href = "/dashboard"
+      }, 500);
     }
   )
 }
@@ -480,10 +485,8 @@ loadProfileName(userType,address){
         <div className="buttons is-centered">
         
         <a className="button is-primary" onClick={() => this.SendPayment()}>
-          <span className="icon">
-          <i className="far fa-user"></i>
-          </span>
-          <span>Confirm and Send payment</span>
+          
+          <span>{this.state.txt}</span>
         </a>
        
         </div>
