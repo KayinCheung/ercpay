@@ -81,9 +81,10 @@ class Section1 extends Component {
                   <p>Login using your Ethereum address with <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">metamask</a>.<br/>No signup required. </p><br/>
                     <p className="has-text-centered">
                     
-                        <a className="button is-medium is-info is-outlined" href="/login">
+                    <Link to="/login">
+                    <p className="button is-medium is-info is-outlined">
                     Login
-                    </a>
+                    </p></Link>
  
                     </p>
                 </div>
@@ -342,7 +343,7 @@ class Section6 extends Component {
                 The seller also has the ability to refund the buyer.
                 <br/><br/>
                 If a dispute occurs, either party can contact us for dispute resolution. 
-                For further info on dispute resolution process, visit our <a href="/info">fees & info page</a>.
+                For further info on dispute resolution process, visit our <Link to="/login">fees & info page</Link>.
             </p>
                     </div>
                 </div>

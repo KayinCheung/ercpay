@@ -422,8 +422,8 @@ loadBuyerUserNames(){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'sent'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <a className="pagination-previous" href={sentPrevUrl}>Previous</a>
-        <a className="button pagination-next" href={sentNextUrl}>Next page</a>
+        <Link to={sentPrevUrl} onClick={() => this.loadCustomerLedger()}><a className="pagination-previous">Previous</a></Link>
+        <Link to={sentNextUrl} onClick={() => this.loadCustomerLedger()}><a className="button pagination-next">Next page</a></Link>
   
         </nav>
         </div>
@@ -436,8 +436,8 @@ loadBuyerUserNames(){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'received'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <a className="pagination-previous" href={receivePrevUrl}>Previous</a>
-        <a className="pagination-next" href={receiveNextUrl}>Next page</a>
+        <Link to={receivePrevUrl} onClick={() => this.loadMerchantLedger()}><a className="pagination-previous">Previous</a></Link>
+        <Link to={receiveNextUrl} onClick={() => this.loadMerchantLedger()}><a className="pagination-next">Next page</a></Link>
   
         </nav>
         </div>
