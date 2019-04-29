@@ -225,14 +225,14 @@ class Section4 extends Component {
   
   
       return (
-        <div className="hero-body bg-lb">
+        <div className="hero-body">
         <div className="container has-text-centered">
             <div className="columns is-vcentered is-centered">
             <div className="column is-7">
             <h1 className="title is-2">Intuitive dashboard</h1>
           
-            <figure className="image is-4by3">
-                        <img src="https://picsum.photos/800/600/?random" alt="Description"/>
+            <figure className="image">
+                        <img src="https://user-images.githubusercontent.com/24837709/56896130-87219900-6abd-11e9-87db-c79b5642e21b.png" alt=""/>
                     </figure><br/>
                     <p>  ERCPay is designed to be simple and intuitive for users familar with traditional payment processors, such as Paypal and Stripe. 
                 Currently we support ETH payments, and stablecoin payments are coming soon.<br/><br/>
