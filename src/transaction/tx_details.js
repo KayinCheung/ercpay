@@ -50,13 +50,14 @@ componentDidMount(){
 
                 //For individual transaction id, get the transaction from TransactionLedger
                 contract.getTransaction.call(id, (error, result) => {
-
+                console.log(result)
                 const tx = util.returnTxMap(id,result)
                 this.setState({
                   tx: tx,
                   ledgerid: id
                 })
 
+                console.log(tx)
                 this.loadProfileName('buyer', tx.buyer)
                 this.loadProfileName('seller', tx.seller)
                 this.loadProfileName('escrow', tx.escrow)
@@ -100,6 +101,8 @@ componentDidMount(){
           case 'escrow':
               this.setState({escrowName: result})
               break
+          default:
+            break
         }
       })
     })
@@ -138,6 +141,9 @@ componentDidMount(){
       tx={this.state.tx}
       />
     }
+
+    const buyer_profile_url = `/profile/${this.state.tx['buyer']}`
+    const seller_profile_url = `/profile/${this.state.tx['seller']}`
 
 
     return (
@@ -197,24 +203,19 @@ componentDidMount(){
         </div>
         <br/>
         <div className="buttons is-centered">
-        <a className="button is-primary">
+        <a className="button is-primary" href={buyer_profile_url} target="_blank">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Buyer Profile</span>
         </a>
-        <a className="button is-primary">
+        <a className="button is-primary" href={seller_profile_url} target="_blank">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Seller Profile</span>
         </a>
-        <a className="button is-primary">
-          <span className="icon">
-          <i className="far fa-user"></i>
-          </span>
-          <span>View Escrow Profile</span>
-        </a>
+      
         </div>
 
         <hr></hr>
@@ -280,7 +281,6 @@ class TxActionSeller extends Component {
     return (
       <div>
       <p className="has-text-left">Transaction Action</p>
-      {this.props.tx.status}
       <br/>
      
       <p className="buttons is-centered">
@@ -309,7 +309,6 @@ class TxActionBuyer extends Component {
     return (
       <div>
       <p className="has-text-left">Transaction Action</p>
-      {this.props.tx.status}
       <br/>
       <p className="buttons is-centered">
       <ReleaseFundsButton 

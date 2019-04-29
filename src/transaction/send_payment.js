@@ -411,6 +411,8 @@ loadProfileName(userType,address){
           case 'escrow':
               this.setState({escrowName: result})
               break
+          default:
+            break
         }
       })
     })

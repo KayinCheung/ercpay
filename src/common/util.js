@@ -24,7 +24,7 @@ const util = {
             escrow: tx[2],
             fee: tx[3]/(10**18),
             value: tx[4]/(10**18),
-            status: status[tx[5]],
+            status: status[parseInt(tx[5])],
             notes: tx[6]
         }
     },

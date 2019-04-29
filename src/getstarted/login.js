@@ -76,7 +76,7 @@ class Login extends Component {
         <section class="hero is-fullheight"><Header/>
         <div class="hero-body">
             <div class="container has-text-centered">
-                <div class="column is-4 is-offset-4">
+                <div class="column is-6 is-offset-3">
                     <h3 class="title has-text-grey">Login</h3>
                     <p class="subtitle has-text-grey">Login to access your dashboard</p>
                     <div class="box">
@@ -85,23 +85,13 @@ class Login extends Component {
                         </figure>
                         <br/>
                         
-                     
                             <p className="has-text-centered">{this.state.address}</p>
                     
-                            <br/>
-
-                            {profile_text}
-                            {authorized_text}
-                            {signup_text}
-
                             <br/>
                             <Link to="/dashboard"><button class="button is-block is-info is-large is-fullwidth">Login</button></Link>
                        
                     </div>
-                    <p class="has-text-grey">
-                        <a href="../">Sign Up</a>
-                      
-                    </p>
+                  
                 </div>
             </div>
         </div>

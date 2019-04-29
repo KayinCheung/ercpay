@@ -102,7 +102,7 @@ class InitializeProfile extends Component {
           <b>Setup</b>
           </div>
           <br/>
-          <p>Add name and information to your ERCPay profile for your customers and merchants to identify you.</p>
+          <p>Add name and information to your ERCPay profile for customers and sellers to identify you.</p>
           <br/>
           <div className="field is-horizontal">
     <div className="field-label is-normal">
@@ -111,7 +111,7 @@ class InitializeProfile extends Component {
     <div className="field-body">
       <div className="field">
         <p className="control">
-          <input className="input is-static" type="email" value="me@example.com" readOnly/>
+          <input className="input is-static" type="email" value={this.state.address} readOnly/>
         </p>
       </div>
     </div>

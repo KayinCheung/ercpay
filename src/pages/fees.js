@@ -31,7 +31,7 @@ class Fees extends Component {
                     <li data-target="pane-2" id="2" class="is-active">
                         <a>
                             <span class="icon is-small"><i class="fab fa-empire"></i></span>
-                            <span>Fees & Rebate</span>
+                            <span>Fees & Info</span>
                         </a>
                     </li>
                     
@@ -72,7 +72,7 @@ class Fees extends Component {
     <br/>
     <br/>
     <h4>If you are communicating on Reddit</h4>
-    Create a group chat, and add /u/ERCPAY_Kayin
+    Create a group chat, and add /u/Arrow222
 
     <br/>
     <br/>
@@ -88,6 +88,8 @@ class Fees extends Component {
 
 <br/><br/>
     This allows us to get a full transcript of evidence and greatly accelerates the dispute resolution process.
+
+
 
     </div>
     <br/>

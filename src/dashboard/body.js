@@ -32,12 +32,24 @@ class Dashboard extends Component {
         customerStart: 0,
         merchantStart: 0,
         customerEnd: 0,
-        merchantEnd: 0
+        merchantEnd: 0,
+
+        sentid: null,
+        receiveid: null
     }
 }
 
 componentDidMount(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const sentid = urlParams.get('sent');
+    const receiveid = urlParams.get('receive');
+    const popup = urlParams.get('popup');
 
+
+    this.setState({
+      sentid: sentid,
+      receiveid: receiveid
+    })
   
     if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
@@ -67,8 +79,8 @@ componentDidMount(){
               //console.log(`Length of profile info ${result}`);
               if (parseInt(result) === 0){
                 this.setState({
-                  profileName: 'Please set your profile',
-                  profileInfo: 'to use ERCPay'
+                  profileName: 'Empty',
+                  profileInfo: ''
                 })
                 return
               }
@@ -95,10 +107,21 @@ componentDidMount(){
           //Get length of customer ledger
           this.state.contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
             //console.log(`customer ledger length ${result}`)
-            this.setState({
-              customerLedgerLength: parseInt(result),
-              customerStart: parseInt(result) - 1,
-            });
+            if (this.state.sentid !== null && parseInt(this.state.sentid) < parseInt(result)){
+              console.log(this.state.sentid)
+              
+              this.setState({
+                customerLedgerLength: parseInt(result),
+                customerStart: parseInt(this.state.sentid),
+              });
+            }
+
+            else{
+              this.setState({
+                customerLedgerLength: parseInt(result),
+                customerStart: parseInt(result) - 1,
+              });
+            }
 
             this.loadCustomerLedger()
             })
@@ -106,39 +129,22 @@ componentDidMount(){
             //Get length of merchant ledger
             contract.getMerchantLedgerLength.call(web3.eth.accounts[0], (error, result) => {
               //console.log(`merchant ledger length ${result}`)
-              this.setState({
-                merchantLedgerLength: parseInt(result),
-                merchantStart: parseInt(result) - 1,
-                merchantEnd: parseInt(result) - 1 - constants.page_size
-              });
-            //Loop through merchant ledger from the end of list, get individual transaction id
-            for (let i = this.state.merchantLedgerLength -1 ; i >= 0 ; i++){
-              contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, id) => {
-                //console.log(id)
+              if (this.state.receiveid !== null && parseInt(this.state.receiveid) < parseInt(result)){
+                this.setState({
+                  merchantLedgerLength: parseInt(result),
+                  merchantStart: parseInt(this.state.receiveid),
+                });
+              }
+  
+              else{
+                this.setState({
+                  merchantLedgerLength: parseInt(result),
+                  merchantStart: parseInt(result) - 1,
+                });
+              }
 
-                //For individual transaction id, get the transaction from TransactionLedger
-                contract.getTransaction.call(id, (error, result) => {
-                  const tx = util.returnTxMap(id,result)
-                  //console.log(tx);
-                  let newLedger = this.state.merchantLedger;
-                  newLedger.push(tx);
-                  //console.log(newLedger.length)
-                  //console.log(this.state.merchantLedgerLength)
-
-                  this.setState({merchantLedger: newLedger})
-                  if (newLedger.length === this.state.merchantLedgerLength){
-                    //console.log("SORT TIME")
-                    
-                    //Run another function to add names to the transaction array object
-                    this.setState({merchantLedger: newLedger})
-                    
-                    this.loadBuyerUserNames(newLedger)
-                    
-                  }
-                  ////console.log(web3.fromWei(tx['value'], 'ether'))
-                })
-              })
-            }
+              
+            this.loadMerchantLedger()
             });
 
 
@@ -146,7 +152,7 @@ componentDidMount(){
             //On address change, reload page.
               setInterval(() => {
                 if (web3.eth.accounts[0] !== this.state.address) {
-                  window.location.reload();
+                  window.location.href = '/dashboard';
                 }
               }, 100);
            });
@@ -161,6 +167,48 @@ componentDidMount(){
      }
 }
 
+  loadMerchantLedger(){
+    const web3 = new Web3(window.ethereum);
+    this.setState({
+      merchantEnd: (this.state.merchantStart + 1 - constants.page_size) < 0 ? 0 : (this.state.merchantStart + 1 - constants.page_size)
+    })
+    
+    //Loop through customer ledger from the end of list, get individual transaction id
+    this.setState({
+    merchantLedger: [],
+    merchantLedgerName: []
+  })
+    
+    for (let i = this.state.merchantStart; i >= this.state.merchantEnd; i--){
+      this.state.contract.MerchantLedger.call(web3.eth.accounts[0],i, (error, id) => {
+        //console.log(i)
+
+        //For individual transaction id, get the transaction from TransactionLedger
+        this.state.contract.getTransaction.call(id, (error, result) => {
+
+          const tx = util.returnTxMap(i,result)
+          let newLedger = this.state.merchantLedger;
+          newLedger.push(tx);
+          
+
+          //After loading the final tx, sort the tx array 
+          if (newLedger.length === (1 + this.state.merchantStart - this.state.merchantEnd)){
+            //console.log(newLedger.length)
+            // newLedger = _.sortBy(newLedger, "id").reverse()
+            //Run another function to add names to the transaction array object
+            this.setState({merchantLedger: newLedger})
+            console.log('load name' + newLedger.length)
+            console.log(this.state.merchantStart)
+            console.log(this.state.merchantEnd)
+            this.loadBuyerUserNames()
+            
+          }
+        })
+      })
+    }
+            
+  }
+
   loadCustomerLedger(){
     const web3 = new Web3(window.ethereum);
     this.setState({
@@ -170,10 +218,10 @@ componentDidMount(){
     console.log(this.state.customerEnd)
     
     //Loop through customer ledger from the end of list, get individual transaction id
-    this.setState({
+  /*  this.setState({
     customerLedger: [],
     customerLedgerName: []
-  })
+  })*/
     
     for (let i = this.state.customerStart; i >= this.state.customerEnd; i--){
       this.state.contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
@@ -182,7 +230,7 @@ componentDidMount(){
         //For individual transaction id, get the transaction from TransactionLedger
         this.state.contract.getTransaction.call(id, (error, result) => {
 
-          const tx = util.returnTxMap(id,result)
+          const tx = util.returnTxMap(i,result)
           let newLedger = this.state.customerLedger;
           newLedger.push(tx);
           
@@ -204,6 +252,44 @@ componentDidMount(){
     }
             
   }
+
+  loadBuyerUserNames222(){
+    console.log('tx len' + this.state.merchantLedger.length)
+   // console.log(txs)
+    for (let i = 0; i < this.state.merchantLedger.length; i++){
+
+    //get the profile info of address
+    this.state.profile_contract.getProfileLength.call(this.state.merchantLedger[i].seller, (error, result) => {
+    //console.log(`Length of profile info ${result}`);
+    if (parseInt(result) === 0)
+      {
+        this.state.merchantLedger[i].sellerName = '';
+        let a = this.state.merchantLedgerName.push(this.state.merchantLedger[i])
+        console.log(a)
+      }
+    
+    else {
+    //Then load profile info. Get last profile from array 
+    this.state.profile_contract.ProfileDB.call(this.state.merchantLedger[i].seller, (result - 1), (error, result) => {
+      this.state.merchantLedger[i].sellerName = result[0]
+      let a = this.state.merchantLedgerName
+      a.push(this.state.merchantLedger[i])
+      this.setState({
+        merchantLedgerName: a
+      })
+      console.log('setname runs')
+      if (this.state.merchantLedgerName.length === this.state.merchantLedger.length){
+        let newLedger = _.sortBy(this.state.merchantLedgerName, "id").reverse()
+        this.setState({
+          merchantLedgerName: newLedger
+        })
+      }  
+    })
+    }
+
+    })
+  }
+}
 
 
   loadSellerUserNames(){
@@ -245,30 +331,30 @@ componentDidMount(){
 }
 
 
-loadBuyerUserNames(txs){
-  for (let i = 0; i < txs.length; i++){
+loadBuyerUserNames(){
+  for (let i = 0; i < this.state.merchantLedger.length; i++){
 
   //get the profile info of address
-  this.state.profile_contract.getProfileLength.call(txs[i].buyer, (error, result) => {
+  this.state.profile_contract.getProfileLength.call(this.state.merchantLedger[i].buyer, (error, result) => {
   //console.log(`Length of profile info ${result}`);
   if (parseInt(result) === 0)
     {
-      txs[i].buyerName = '';
-      let a = this.state.merchantLedgerName.push(txs[i])
+      this.state.merchantLedger[i].buyerName = '';
+      let a = this.state.merchantLedgerName.push(this.state.merchantLedger[i])
       console.log(a)
     }
   
   else {
   //Then load profile info. Get last profile from array 
-  this.state.profile_contract.ProfileDB.call(txs[i].buyer, (result - 1), (error, result) => {
-    txs[i].buyerName = result[0]
+  this.state.profile_contract.ProfileDB.call(this.state.merchantLedger[i].buyer, (result - 1), (error, result) => {
+    this.state.merchantLedger[i].buyerName = result[0]
     let a = this.state.merchantLedgerName
-    a.push(txs[i])
+    a.push(this.state.merchantLedger[i])
     this.setState({
       merchantLedgerName: a
     })
 
-    if (this.state.merchantLedgerName.length === this.state.merchantLedgerLength){
+    if (this.state.merchantLedgerName.length === this.state.merchantLedger.length){
       let newLedger = _.sortBy(this.state.merchantLedgerName, "id").reverse()
       this.setState({
         merchantLedgerName: newLedger
@@ -276,7 +362,6 @@ loadBuyerUserNames(txs){
     }
   })
   }
-
   })
 }
 }
@@ -285,6 +370,30 @@ loadBuyerUserNames(txs){
   render() {
    // console.log(this.state.customerLedger)
    // console.log(this.state.customerLedgerName)
+    let sentNext
+    (this.state.customerStart - constants.page_size) <= 0 ? 
+    sentNext = this.state.customerStart : 
+    sentNext = this.state.customerStart - constants.page_size
+
+    let sentPrev
+    (this.state.customerStart + constants.page_size) >= this.state.customerLedgerLength ? 
+    sentPrev = this.state.customerLedgerLength - 1 : 
+    sentPrev = this.state.customerStart + constants.page_size
+
+    let receiveNext
+    (this.state.merchantStart - constants.page_size) <= 0 ? 
+    receiveNext = this.state.merchantStart : 
+    receiveNext = this.state.merchantStart - constants.page_size
+
+    let receivePrev
+    (this.state.merchantStart + constants.page_size) >= this.state.merchantLedgerLength ? 
+    receivePrev = this.state.merchantLedgerLength - 1 : 
+    receivePrev = this.state.merchantStart + constants.page_size
+
+    const sentNextUrl = `/dashboard?sent=${sentNext}&receive=${this.state.merchantStart}`
+    const sentPrevUrl = `/dashboard?sent=${sentPrev}&receive=${this.state.merchantStart}`
+    const receiveNextUrl = `/dashboard?receive=${receiveNext}&sent=${this.state.customerStart}`
+    const receivePrevUrl = `/dashboard?receive=${receivePrev}&sent=${this.state.customerStart}`
 
     return (
       <div>
@@ -299,7 +408,7 @@ loadBuyerUserNames(txs){
         <FundsAvailable balance={this.state.balance}/>
         <WithdrawFunds funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
         <Profile profileName={this.state.profileName} profileInfo={this.state.profileInfo} address={this.state.address}/>
-        <SendPayment/>
+        <SendPayment disabled={this.state.profileName === 'Empty' ? true : false}/>
         </div>
         
         <div className="column">
@@ -313,8 +422,8 @@ loadBuyerUserNames(txs){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'sent'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <a className="pagination-previous">Previous</a>
-        <button className="button pagination-next">Next page</button>
+        <a className="pagination-previous" href={sentPrevUrl}>Previous</a>
+        <a className="button pagination-next" href={sentNextUrl}>Next page</a>
   
         </nav>
         </div>
@@ -327,8 +436,8 @@ loadBuyerUserNames(txs){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'received'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <a className="pagination-previous">Previous</a>
-        <a className="pagination-next">Next page</a>
+        <a className="pagination-previous" href={receivePrevUrl}>Previous</a>
+        <a className="pagination-next" href={receiveNextUrl}>Next page</a>
   
         </nav>
         </div>
@@ -357,7 +466,7 @@ class Profile extends Component {
         <br/>
         <p className="buttons is-centered">
         <a className="button is-primary" href="/activity/set_profile">Update Profile</a>
-        <a className="button is-primary" href={profile_link}>View Profile</a>
+        <a className="button is-primary" href={profile_link} target="_blank">View Profile</a>
         </p>
         </div>
 
@@ -411,16 +520,35 @@ class WithdrawFunds extends Component {
 class SendPayment extends Component {
 
   render() {
-    return (
-      <div className="box">
 
-      <p className="is-size-4 has-text-weight-semibold">Payments</p><br/>
-      <p>Send payment for goods or services with buyer protection.</p><br/>
-      <Link to="/activity/send_payment"><p className="button is-primary">Send Payment</p></Link>
-      </div>
- 
+    if (this.props.disabled === true){
+      return (
+        <div className="box">
+  
+        <p className="is-size-4 has-text-weight-semibold">Payments</p><br/>
+        <p>Send payment for goods or services with buyer protection.</p><br/>
+        <Link to="/activity/send_payment"><button className="button is-primary" disabled>Send Payment</button></Link>
+        <p className="is-size-7">Please set your profile info to use ERCPay</p>
+        </div>
+   
+  
+      );
+    }
 
-    );
+    else{
+      return (
+        <div className="box">
+  
+        <p className="is-size-4 has-text-weight-semibold">Payments</p><br/>
+        <p>Send payment for goods or services with buyer protection.</p><br/>
+        <Link to="/activity/send_payment"><p className="button is-primary">Send Payment</p></Link>
+        </div>
+   
+  
+      );
+    }
+
+
   }
 }
 

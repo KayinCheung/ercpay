@@ -73,10 +73,13 @@ class Table extends Component {
 
         <table className="table is-fullwidth is-hoverable is-striped">
         <thead>
-
+        <td>Txid</td>
+        <td>Info</td>
+        <td>Amount</td>
         </thead>
         <tfoot>
         </tfoot>
+
         <tbody>
             {tableRows}
         </tbody>

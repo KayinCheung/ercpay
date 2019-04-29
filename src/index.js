@@ -26,7 +26,7 @@ ReactDOM.render(
     <Route path="/" exact component={Home} />
     <Route path="/dashboard" exact component={App} />
 
-    <Route path="/fees" exact component={Fees} />
+    <Route path="/info" exact component={Fees} />
     <Route path="/login" exact component={Login} />
 
     <Route path="/activity/transaction/:type/:id" exact component={TransactionDetails} />

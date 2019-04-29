@@ -29,7 +29,7 @@ class Home extends Component {
                                 <ul>
                                     <li className="is-active"><Link to="/">Home</Link></li>
                                
-                                    <li><Link to="/fees">Fees & Info</Link></li>
+                                    <li><Link to="/info">Fees & Info</Link></li>
                                     <li><Link to="/login">Login</Link></li>
                                 </ul>
                             </div>
@@ -47,9 +47,8 @@ class Home extends Component {
         <Section2/>
       
         <Section6/>
-
+        <DevSection/>
         <Section5/>
-        <Footer/>
 
       
     </section>
@@ -79,7 +78,7 @@ class Section1 extends Component {
                     <h1 className="subtitle is-3">
                         Send and receive ETH <br/>with escrow protection
                     </h1>
-                  <p>Login using your Ethereum address with metamask.</p><br/>
+                  <p>Login using your Ethereum address with <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">metamask</a>.<br/>No signup required. </p><br/>
                     <p className="has-text-centered">
                     
                         <a className="button is-medium is-info is-outlined" href="/login">
@@ -104,12 +103,12 @@ class Section2 extends Component {
       return (
         <section className="container">
             <br/>
+            <br/>
         <div className="content has-text-centered"><h1>Benefits of ERCPay</h1></div>
         <div className="columns features">
             <div className="column is-4">
                 <div className="card is-shady">
                     <div className="card-image has-text-centered">
-                        <i className="fa fa-paw"></i>
                     </div>
                     <div className="card-content">
                         <div className="content">
@@ -119,8 +118,8 @@ class Section2 extends Component {
                                 payments are held in escrow using an Ethereum smart contract.
                                 <br/><br/>
                                 
-
-                                Funds from transactions are released after 30 days if there are no disputes. You can also release funds early to earn a rebate.
+                                Funds from transactions are released by the buyer once product is received. 
+                                
                             </p>
                         </div>
                     </div>
@@ -129,15 +128,14 @@ class Section2 extends Component {
             <div className="column is-4">
                 <div className="card is-shady">
                     <div className="card-image has-text-centered">
-                        <i className="fa fa-empire"></i>
                     </div>
                     <div className="card-content">
                         <div className="content">
-                            <h4>Low fees</h4>
-                            <p>Flat 1% transaction fees<br/><br/>
-                            Because we leverage the Ethereum Blockchain for our back-end systems instead of expensive datacenters, 
-                            the savings are passed on in low fees.
-                            <br/><br/><br/>
+                            <h4>1% transaction fee</h4>
+                            <p>
+                            We leverage the Ethereum Blockchain for our back-end systems. <br/><br/>
+                            Because we don't incur costs of inter-bank transfers and expensive datacenters, our fees are the industry's lowest, at just 1%.
+                            <br/><br/>
                             </p>
                         </div>
                     </div>
@@ -146,14 +144,13 @@ class Section2 extends Component {
             <div className="column is-4">
                 <div className="card is-shady">
                     <div className="card-image has-text-centered">
-                        <i className="fa fa-apple"></i>
                     </div>
                     <div className="card-content">
                         <div className="content">
                             <h4>Secure fund ownership</h4>
                             <p>
                                 Your funds, even funds within the smart contract, can only be controlled with your Ethereum address.<br/><br/>
-                                This means no entity can ever withhold your funds or freeze your account.<br/><br/><br/>
+                                This means no entity can ever withhold your funds or freeze your account.<br/><br/>
                             </p>
                             
                         </div>
@@ -206,7 +203,7 @@ class Section3 extends Component {
                     <h2 className="subtitle is-5">
                     </h2>
                     <p>ERCPay is the world's first payment processor built on Ethereum smart contracts.
-                    We leverage blockchain technology to offer the industry's lowest transaction fee of 1% and highest funds security.
+                    We leverage blockchain technology to offer the industry's lowest transaction fee and highest funds security.
                     </p>
 
              
@@ -233,22 +230,25 @@ class Section4 extends Component {
             <div className="columns is-vcentered is-centered">
             <div className="column is-7">
             <h1 className="title is-2">Intuitive dashboard</h1>
-            <p>Simple and familar to use.</p><br/>
           
             <figure className="image is-4by3">
                         <img src="https://picsum.photos/800/600/?random" alt="Description"/>
                     </figure><br/>
                     <p>  ERCPay is designed to be simple and intuitive for users familar with traditional payment processors, such as Paypal and Stripe. 
-                Currently we support ETH payments, and stablecoin payments are coming soon.</p>
+                Currently we support ETH payments, and stablecoin payments are coming soon.<br/><br/>
+                You can also test sending and receiving of payments on the Ropsten testnet.
+               </p>
                 <br/>
                     <p className="buttons is-centered">
                     <a className="button is-info is-outlined">
-            Login
+            View Dashboard
           </a>
-          <a className="button is-info is-outlined">
-            View Demo
-          </a>
+          
           </p>
+         
+          <p className="is-size-7">Login with <a href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn" target="_blank">metamask</a> to view the dashboard. No signup required.</p>
+
+
                     
             </div>
             </div>
@@ -265,7 +265,7 @@ class Section5 extends Component {
   
   
       return (
-        <div className="hero-body">
+        <div className="hero-body bg-lb">
         <div className="container has-text-centered">
         <h1 className="title is-3">
             Contact Us
@@ -294,6 +294,29 @@ class Section5 extends Component {
 }
 
 
+class DevSection extends Component {
+
+    render() {
+  
+  
+      return (
+        <div className="hero-body">
+        <div className="container has-text-centered">
+        <h1 className="title is-3">
+            Developers Section
+        </h1>
+        <p>View our open sourced smart contracts and technical documents.</p>
+        <br/>
+        <p><b>ERCPay</b><br/>Mainnet | Ropsten</p><br/>
+        <p><b>ERCPay Profile</b><br/>Mainnet | Ropsten</p><br/>
+        <p><b>Github</b></p>
+        </div>
+    </div>
+      );
+    }
+    
+}
+
 class Section6 extends Component {
     
         render() {
@@ -318,7 +341,8 @@ class Section6 extends Component {
                 When the seller fulfills his obligations, the buyer can release funds to the seller. 
                 The seller also has the ability to refund the buyer.
                 <br/><br/>
-                If a dispute occurs, either party can contact us for dispute resolution.
+                If a dispute occurs, either party can contact us for dispute resolution. 
+                For further info on dispute resolution process, visit our <a href="/info">fees & info page</a>.
             </p>
                     </div>
                 </div>
