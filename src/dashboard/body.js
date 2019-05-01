@@ -45,7 +45,7 @@ componentDidMount(){
     const receiveid = urlParams.get('receive');
     const popup = urlParams.get('popup');
 
-
+    console.log(sentid)
     this.setState({
       sentid: sentid,
       receiveid: receiveid
@@ -107,13 +107,15 @@ componentDidMount(){
           //Get length of customer ledger
           this.state.contract.getCustomerLedgerLength.call(web3.eth.accounts[0], (error, result) => {
             //console.log(`customer ledger length ${result}`)
-            if (this.state.sentid !== null && parseInt(this.state.sentid) < parseInt(result)){
-              console.log(this.state.sentid)
+            let customerStart
+            if (sentid !== null && parseInt(sentid) < parseInt(result)){
+              console.log(sentid)
               
               this.setState({
                 customerLedgerLength: parseInt(result),
-                customerStart: parseInt(this.state.sentid),
+                customerStart: parseInt(sentid),
               });
+              customerStart = parseInt(sentid)
             }
 
             else{
@@ -121,18 +123,20 @@ componentDidMount(){
                 customerLedgerLength: parseInt(result),
                 customerStart: parseInt(result) - 1,
               });
+
+              customerStart = parseInt(result) - 1
             }
 
-            this.loadCustomerLedger()
+            this.loadCustomerLedger(customerStart)
             })
 
             //Get length of merchant ledger
             contract.getMerchantLedgerLength.call(web3.eth.accounts[0], (error, result) => {
               //console.log(`merchant ledger length ${result}`)
-              if (this.state.receiveid !== null && parseInt(this.state.receiveid) < parseInt(result)){
+              if (receiveid !== null && parseInt(receiveid) < parseInt(result)){
                 this.setState({
                   merchantLedgerLength: parseInt(result),
-                  merchantStart: parseInt(this.state.receiveid),
+                  merchantStart: parseInt(receiveid),
                 });
               }
   
@@ -198,8 +202,7 @@ componentDidMount(){
             //Run another function to add names to the transaction array object
             this.setState({merchantLedger: newLedger})
             console.log('load name' + newLedger.length)
-            console.log(this.state.merchantStart)
-            console.log(this.state.merchantEnd)
+ 
             this.loadBuyerUserNames()
             
           }
@@ -209,21 +212,23 @@ componentDidMount(){
             
   }
 
-  loadCustomerLedger(){
+  loadCustomerLedger(customerStart){
     const web3 = new Web3(window.ethereum);
     this.setState({
-      customerEnd: (this.state.customerStart + 1 - constants.page_size) < 0 ? 0 : (this.state.customerStart + 1 - constants.page_size)
+      customerEnd: (customerStart + 1 - constants.page_size) < 0 ? 0 : (this.state.customerStart + 1 - constants.page_size)
     })
-    console.log(this.state.customerStart)
-    console.log(this.state.customerEnd)
+    let customerEnd = (customerStart + 1 - constants.page_size) < 0 ? 0 : (this.state.customerStart + 1 - constants.page_size)
+    console.log(customerStart)
+    console.log(customerEnd)
     
     //Loop through customer ledger from the end of list, get individual transaction id
-  /*  this.setState({
+    this.setState({
     customerLedger: [],
     customerLedgerName: []
-  })*/
+    })
     
-    for (let i = this.state.customerStart; i >= this.state.customerEnd; i--){
+    
+    for (let i = customerStart; i >= customerEnd; i--){
       this.state.contract.CustomerLedger.call(web3.eth.accounts[0],i, (error, id) => {
         //console.log(id)
 
@@ -236,14 +241,13 @@ componentDidMount(){
           
 
           //After loading the final tx, sort the tx array 
-          if (newLedger.length === (1 + this.state.customerStart - this.state.customerEnd)){
+          if (newLedger.length === (1 + customerStart - customerEnd)){
             //console.log(newLedger.length)
             // newLedger = _.sortBy(newLedger, "id").reverse()
             //Run another function to add names to the transaction array object
             this.setState({customerLedger: newLedger})
             console.log('load name' + newLedger.length)
-            console.log(this.state.customerStart)
-            console.log(this.state.customerEnd)
+        
             this.loadSellerUserNames()
             
           }
@@ -422,8 +426,20 @@ loadBuyerUserNames(){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'sent'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <Link to={sentPrevUrl} onClick={() => this.loadCustomerLedger()}><a className="pagination-previous">Previous</a></Link>
-        <Link to={sentNextUrl} onClick={() => this.loadCustomerLedger()}><a className="button pagination-next">Next page</a></Link>
+        <Link to={sentPrevUrl} onClick={() => 
+          {
+            setTimeout(() => {
+              this.componentDidMount()
+            }, 100)
+          }
+          }><a className="pagination-previous">Previous</a></Link>
+        <Link to={sentNextUrl} onClick={() => 
+          {
+            setTimeout(() => {
+              this.componentDidMount()
+            }, 100)
+          }
+          }><a className="button pagination-next">Next page</a></Link>
   
         </nav>
         </div>
@@ -436,8 +452,16 @@ loadBuyerUserNames(){
         <Table customerLedger={this.state.customerLedgerName} merchantLedger={this.state.merchantLedgerName} type={'received'}/>
         <br/>
         <nav className="pagination is-centered is-small" role="navigation" aria-label="pagination">
-        <Link to={receivePrevUrl} onClick={() => this.loadMerchantLedger()}><a className="pagination-previous">Previous</a></Link>
-        <Link to={receiveNextUrl} onClick={() => this.loadMerchantLedger()}><a className="pagination-next">Next page</a></Link>
+        <Link to={receivePrevUrl} onClick={() => {
+            setTimeout(() => {
+              this.componentDidMount()
+            }, 100)
+          }}><a className="pagination-previous">Previous</a></Link>
+        <Link to={receiveNextUrl} onClick={() => {
+            setTimeout(() => {
+              this.componentDidMount()
+            }, 100)
+          }}><a className="pagination-next">Next page</a></Link>
   
         </nav>
         </div>

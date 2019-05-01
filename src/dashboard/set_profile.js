@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import Web3 from 'web3';
 import constants from '../common/constant.js'
+import { Link } from "react-router-dom";
 
 import Header from '../common/header.js'
 
@@ -23,7 +24,7 @@ class SetProfile extends Component {
         
         <br/>
         <div className="has-text-centered">
-          <a className="button is-primary" href="/dashboard">Back to Dashboard</a><br/><br/>
+          <Link to="/dashboard"><p className="button is-primary">Back to Dashboard</p></Link><br/><br/>
         </div>
        
         </div>
@@ -69,7 +70,9 @@ class InitializeProfile extends Component {
      }
 
      else {
-        window.location.href = "/login";
+       // window.location.href = "/login";
+        this.props.history.push('/login')
+
      }
 }
 

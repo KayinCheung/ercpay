@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
+import { Link } from "react-router-dom";
 
 
 class Fees extends Component {
@@ -23,10 +24,11 @@ class Fees extends Component {
             <div class="tabs is-boxed is-centered main-menu" id="nav">
                 <ul>
                     <li data-target="pane-1" id="1">
-                        <a href="/">
+                       <Link to="/"> <p>
                             <span class="icon is-small"><i class="fa fa-image"></i></span>
                             <span>Home</span>
-                        </a>
+                        </p>
+                        </Link>
                     </li>
                     <li data-target="pane-2" id="2" class="is-active">
                         <a>

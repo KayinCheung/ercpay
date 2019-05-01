@@ -14,9 +14,9 @@ class Home extends Component {
             <nav className="navbar">
                 <div className="container">
                     <div className="navbar-brand">
-                        <a className="navbar-item" href="/">
+                        <p className="navbar-item">
             ERCPAY
-          </a>
+          </p>
                         <span className="navbar-burger burger" data-target="navbarMenu">
             <span></span>
                         <span></span>

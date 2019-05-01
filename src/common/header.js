@@ -40,9 +40,9 @@ class Header extends Component {
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation" >
         <div className="navbar-brand">
-          <a className="navbar-item" href="/">
+          <Link to="/"><p className="navbar-item">
             ERCPAY
-          </a>
+          </p></Link>
       
           <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
@@ -55,25 +55,25 @@ class Header extends Component {
           <div className="navbar-start">
          
       
-            <a className="navbar-item" href="/dashboard">
+          <Link to="/dashboard"><p className="navbar-item">
             Dashboard
-            </a>
+            </p></Link>
 
             <div className="navbar-item has-dropdown is-hoverable">
-            <a className="navbar-link" href={profile_url}>
+            <Link to={profile_url}><p className="navbar-link">
             View Profile
-          </a>
+          </p></Link>
   
           <div className="navbar-dropdown">
-            <a className="navbar-item" href="/activity/set_profile">
+          <Link to="/activity/set_profile"><a className="navbar-item">
               Update Profile
-            </a>            
+            </a></Link>     
           </div>
       </div>
-
-      <a className="navbar-item" href="/activity/send_payment">
+      <Link to="/activity/send_payment">
+      <p className="navbar-item">
             Send Payment
-            </a>
+            </p></Link>  
 
 
 
@@ -84,9 +84,11 @@ class Header extends Component {
             <div className="navbar-item">
               <AddressDropdown address={this.state.address}/>
             </div>
-            <a className="navbar-item" href="/">
+            <Link to="/">
+            <p className="navbar-item">
              Logout
-            </a>
+            </p>
+            </Link>
           </div>
         </div>
       </nav>

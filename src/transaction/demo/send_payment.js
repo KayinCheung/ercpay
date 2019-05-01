@@ -28,7 +28,8 @@ class SendPayment extends Component {
                   this.setState({address: web3.eth.accounts[0]})
                   setInterval(() => {
                     if (web3.eth.accounts[0] !== this.state.address) {
-                        window.location.href = "/login"
+                        //window.location.href = "/login"
+                        window.location.reload()
                     }
                   }, 100);
                });
