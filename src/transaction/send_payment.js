@@ -373,7 +373,7 @@ SendPayment(){
   this.state.contract.createPayment.sendTransaction(
     this.props.sellerAddress,
     constants.escrowAddress,
-    'a', //notes. leave empty for now
+    '', //notes. leave empty for now
     {
       from: this.props.address,
       value: this.props.ethAmount*(10**18),

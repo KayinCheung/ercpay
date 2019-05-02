@@ -489,8 +489,8 @@ class Profile extends Component {
         <p>{this.props.profileInfo}</p>
         <br/>
         <p className="buttons is-centered">
-        <a className="button is-primary" href="/activity/set_profile">Update Profile</a>
-        <a className="button is-primary" href={profile_link} target="_blank">View Profile</a>
+        <Link to="/activity/set_profile"><p className="button is-primary">Update Profile</p></Link>
+        <Link to={profile_link}><p className="button is-primary">View Profile</p></Link>
         </p>
         </div>
 

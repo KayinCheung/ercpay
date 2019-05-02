@@ -308,8 +308,8 @@ class DevSection extends Component {
         </h1>
         <p>View our open sourced smart contracts and technical documents.</p>
         <br/>
-        <p><b>ERCPay</b><br/>Mainnet | Ropsten</p><br/>
-        <p><b>ERCPay Profile</b><br/>Mainnet | Ropsten</p><br/>
+        <p><b>ERCPay</b><br/>Mainnet | <a href="https://ropsten.etherscan.io/address/0xa4f1032d9b1485b9384f7061d95c732edb9c1527" target="_blank">Ropsten</a></p><br/>
+        <p><b>ERCPay Profile</b><br/>Mainnet | <a href="https://ropsten.etherscan.io/address/0xe54c0168d2e75c7f68fcf40b0ab5793115dd2a92" target="_blank">Ropsten</a></p><br/>
         <p><b>Github</b></p>
         </div>
     </div>
