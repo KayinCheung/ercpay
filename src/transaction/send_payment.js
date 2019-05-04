@@ -279,12 +279,12 @@ class SendPayment extends Component {
     </div>
     {this.state.addressInputText}
     <br/>
-    <a className="button is-primary is-small" href={profile_url} target="_blank">
+    <Link to={profile_url} target="_blank"><p className="button is-primary is-small">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Seller's Profile</span>
-        </a>
+        </p></Link>
     </div>
     <br/>
     <div className="buttons is-centered">

@@ -3,6 +3,7 @@ import '../App.css';
 
 import Header from '../common/header.js'
 import Web3 from 'web3';
+import { Link } from "react-router-dom";
 
 import constants from '../common/constant.js'
 import util from '../common/util.js'
@@ -203,18 +204,19 @@ componentDidMount(){
         </div>
         <br/>
         <div className="buttons is-centered">
-        <a className="button is-primary" href={buyer_profile_url} target="_blank">
+        <Link to={buyer_profile_url} target="_blank"><p className="button is-primary">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Buyer Profile</span>
-        </a>
-        <a className="button is-primary" href={seller_profile_url} target="_blank">
+        </p></Link>
+        <Link to={seller_profile_url} target="_blank">
+        <p className="button is-primary">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Seller Profile</span>
-        </a>
+        </p></Link>
       
         </div>
 
