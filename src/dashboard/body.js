@@ -414,7 +414,6 @@ loadBuyerUserNames(){
         <WithdrawFunds funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
         <Profile profileName={this.state.profileName} profileInfo={this.state.profileInfo} address={this.state.address}/>
         <SendPayment disabled={this.state.profileName === 'Empty' ? true : false}/>
-        <CreateInvoice address={this.state.address}/>
         </div>
         
         <div className="column">
@@ -590,7 +589,7 @@ class CreateInvoice extends Component {
 
         <p className="is-size-4 has-text-weight-semibold">Invoicing</p><br/>
         <p>Your customers can pay you through the invoice link you send them.</p><br/>
-        <a className="button is-primary" href={url}>Create Invoice</a>
+        <Link to={url}><p className="button is-primary">Create Invoice</p></Link>
         </div>
  
 

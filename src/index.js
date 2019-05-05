@@ -10,6 +10,7 @@ import App from './App';
 import TransactionDetails from './transaction/tx_details'
 import Home from './home/home';
 import Fees from './pages/fees';
+import Faq from './pages/faq';
 import Login from './getstarted/login';
 
 import CreateInvoice from './transaction/create_invoice';
@@ -29,13 +30,16 @@ ReactDOM.render(
     <Route path="/" exact component={Home} />
     <Route path="/dashboard" exact component={App} />
 
-    <Route path="/fees" exact component={Fees} />
+    <Route path="/info" exact component={Fees} />
+    <Route path="/faq" exact component={Faq} />
+
     <Route path="/login" exact component={Login} />
 
     <Route path="/activity/transaction/:type/:id" exact component={TransactionDetails} />
 
     <Route path="/activity/create_invoice/:address" exact component={CreateInvoice} />
     <Route path="/activity/send_payment" exact component={SendPayment} />
+    <Route path="/activity/send_payment/:address/:currency/:amount" exact component={SendPayment} />
     <Route path="/activity/confirm_payment" exact component={SendPaymentConfirm} />
     <Route path="/activity/set_profile" exact component={SetProfile} />
 

@@ -118,7 +118,6 @@ componentDidMount(){
     })
     this.state.contract.getEscrowLedgerLength.call(escrow, (error, result) => {
       this.setState({escrowTxCount: parseInt(result)})
-    
     })
   }
 
