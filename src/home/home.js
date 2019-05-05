@@ -69,8 +69,8 @@ class Section1 extends Component {
         <div className="container has-text-centered">
             <div className="columns is-vcentered">
                 <div className="column is-5">
-                    <figure className="image is-4by3">
-                        <img src="https://picsum.photos/800/600/?random" alt="Description"/>
+                    <figure className="image">
+                        <img src="https://user-images.githubusercontent.com/24837709/57173766-65caff00-6e67-11e9-9060-52b7a65e5dce.jpg" alt="Description"/>
                     </figure>
                 </div>
                 <div className="column is-6 is-offset-1">
@@ -241,9 +241,9 @@ class Section4 extends Component {
                </p>
                 <br/>
                     <p className="buttons is-centered">
-                    <a className="button is-info is-outlined">
+                    <Link to="/login"><p className="button is-info is-outlined">
             View Dashboard
-          </a>
+          </p></Link>
           
           </p>
          
@@ -272,21 +272,19 @@ class Section5 extends Component {
             Contact Us
         </h1>
         <p>Feel free to reach out if you have any questions, feedback or suggestion. Reach us at: </p>
-                    <br/>
-                    <p className="buttons is-centered">
-                        <a className="button is-info is-outlined">
-            Reddit
-          </a>
-          <a className="button is-info is-outlined">
-            Bitcointalk
-          </a>
-          <a className="button is-info is-outlined">
-          Email
-        </a>          
-        <a className="button is-info is-outlined">
-            Linkedin
-          </a>
-                    </p>
+        <br/>
+        <b>Email</b><br/> ercpayescrow@gmail.com
+        <br/>
+        <br/>
+        <b>Reddit</b><br/>
+        https://www.reddit.com/r/ERCPay
+        <br/>
+        <br/>
+        <b>Telegram</b><br/>
+        https://t.me/ercpay
+        <br/><br/>
+
+                    
         </div>
     </div>
       );

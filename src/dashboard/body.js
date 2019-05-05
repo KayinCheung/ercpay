@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import '../App.css';
+import '../index.css';
 
 import Table from './table.js';
 import Header from '../common/header.js'
@@ -16,12 +17,12 @@ class Dashboard extends Component {
     super(props)
     this.state = {
         address: '',
-        balance: 'Loading...',
+        balance: 0,
         customerLedger: [],
         merchantLedger: [],
         customerLedgerLength: 0,
         merchantLedgerLength: 0,
-        funds: 'Loading...',
+        funds: 0,
 
         profileName: 'Loading...',
         profileInfo: 'Loading...',
@@ -413,6 +414,7 @@ loadBuyerUserNames(){
         <WithdrawFunds funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
         <Profile profileName={this.state.profileName} profileInfo={this.state.profileInfo} address={this.state.address}/>
         <SendPayment disabled={this.state.profileName === 'Empty' ? true : false}/>
+        <CreateInvoice address={this.state.address}/>
         </div>
         
         <div className="column">
@@ -490,6 +492,7 @@ class Profile extends Component {
         <br/>
         <p className="buttons is-centered">
         <Link to="/activity/set_profile"><p className="button is-primary">Update Profile</p></Link>
+        &nbsp;
         <Link to={profile_link}><p className="button is-primary">View Profile</p></Link>
         </p>
         </div>
@@ -506,7 +509,8 @@ class FundsAvailable extends Component {
       <div className="box">
         <p className="is-size-4 has-text-weight-semibold">Address Balance</p>
         <br/>
-        <p className="is-size-3">{this.props.balance} ETH</p>
+        <p className="is-size-3"><a className="has-text-dark" href="#" title={this.props.balance}>
+          {+(this.props.balance).toFixed(10)}</a> ETH</p>
         <br/>
         </div>
 
@@ -524,7 +528,8 @@ class WithdrawFunds extends Component {
       <div className="box">
       <p className="is-size-4 has-text-weight-semibold">ERCPay Funds</p> 
       <br/>
-      <p className="is-size-3">{this.props.funds} ETH</p>
+      <p className="is-size-3"><a className="has-text-dark" href="#" title={this.props.funds}>
+        {+(this.props.funds).toFixed(10)}</a> ETH</p>
       <br/>
       <a className="button is-primary" onClick={() => {
         this.props.contract.withdraw.sendTransaction({
@@ -579,12 +584,13 @@ class SendPayment extends Component {
 class CreateInvoice extends Component {
 
   render() {
+    const url = `/activity/create_invoice/${this.props.address}`
     return (
       <div className="box">
 
         <p className="is-size-4 has-text-weight-semibold">Invoicing</p><br/>
         <p>Your customers can pay you through the invoice link you send them.</p><br/>
-        <a className="button is-primary">Create Invoice</a>
+        <a className="button is-primary" href={url}>Create Invoice</a>
         </div>
  
 

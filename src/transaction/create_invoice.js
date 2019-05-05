@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Web3 from 'web3';
 import constants from '../common/constant.js'
 
-class SendPayment extends Component {
+class CreateInvoice extends Component {
 
     constructor(props){
         super(props)
@@ -17,10 +17,12 @@ class SendPayment extends Component {
             currency: 'eth',
             modal: '',
             ethAmount: 0,
+            usdAmount: 0,
             sellerAddress: '',
             addressInputText: <p className="help"></p>,
             name: '',
-            info: ''
+            info: '',
+            url: ''
         }
         this.loadProfileInfo = this.loadProfileInfo.bind(this);
         
@@ -88,6 +90,7 @@ class SendPayment extends Component {
 
     let ethAmount = Math.round(input/this.state.ethPrice*10000000)/10000000
         this.setState({
+            usdAmount: input,
             ethInputText: <p className="help">{ethAmount} ETH = US$ {input}</p>,
             ethAmount: parseFloat(ethAmount)
         })
@@ -116,19 +119,6 @@ class SendPayment extends Component {
         })
         return
     }
-
-    //Then check address input
-    const web3 = new Web3(window.ethereum);    
-    const address = document.getElementById('selleraddress').value
-    if (web3.isAddress(address) === false){
-        console.log('address invalid')
-        this.setState({
-            addressInputText: <p className="help is-danger">Invalid ETH address</p>
-        })
-        return
-    }
-
-
     
     console.log(this.state.name)
     if (this.state.name === 'Unregistered User'){
@@ -138,17 +128,21 @@ class SendPayment extends Component {
         return
     }
 
-    this.setState({
-        modal: 'is-active',
-        sellerAddress: document.getElementById('selleraddress').value
-    })
+    else{
+        const amount = this.state.currency === 'eth' ? this.state.ethAmount : this.state.usdAmount
+
+        this.setState({
+            url: `${window.location.protocol}//${window.location.hostname}/activity/send_payment/${this.state.address}/${this.state.currency}/${amount}`
+        })
+    }
   }
 
   loadProfileInfo(){
     //Load profile info
 
-    const address = document.getElementById('selleraddress').value
     const web3 = new Web3(window.ethereum);
+    const address = web3.eth.accounts[0]
+    
 
     if (web3.isAddress(address) === false){
         console.log('address invalid')
@@ -166,7 +160,7 @@ class SendPayment extends Component {
           this.setState({
           name: 'Unregistered User',
           info: '',
-          addressInputText: <p className="help is-danger">Unregistered User. Please ask seller to register before sending payment.</p>
+          addressInputText: <p className="help is-danger">Unregistered User. Please <Link to="/activity/set_profile">set your profile</Link> before sending payment.</p>
           
         
         })
@@ -221,7 +215,7 @@ class SendPayment extends Component {
       <nav className="level">
       <div className="level-left">
         <div className="level-item">
-        <p>Send ETH Payment</p>
+        <p>Create Invoice</p>
         
         </div>
         </div>
@@ -261,43 +255,21 @@ class SendPayment extends Component {
     
     </div>
     {this.state.ethInputText}
+    <p className="help">For invoice in USD, buyer will pay equivalent amount in ETH at conversion rate at time of payment.</p>
+    <br/>
     <br/>
 
 
-    <div className="field">
-    <label className="label">Pay To Address</label>
-    <div className="control has-icons-left has-icons-right" style={{width:500}}>
-        <input className="input" type="text" 
-        placeholder="0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" 
-        id='selleraddress'
-        onChange={() =>this.loadProfileInfo()}
-        />
-        <span className="icon is-small is-left">
-        <i className="fas fa-user"></i>
-        </span>
-        
-    </div>
-    {this.state.addressInputText}
-    <br/>
-    <Link to={profile_url} target="_blank"><p className="button is-primary is-small">
-          <span className="icon">
-          <i className="far fa-user"></i>
-          </span>
-          <span>View Seller's Profile</span>
-        </p></Link>
-    </div>
     <br/>
     <div className="buttons is-centered">
         
         <p className="button is-primary" onClick={() => this.activateModal()}>
-          <span className="icon">
-          <i className="far fa-user"></i>
-          </span>
-          <span>Next</span>
+       
+          <span>Generate Invoice Link</span>
         </p>
        
         </div>
-        <p className="has-text-centered is-size-7">You will be asked to confirm your payment on the next page</p>
+       <p className="has-text-centered">{this.state.url}</p>
 
 </div>
 
@@ -311,7 +283,7 @@ class SendPayment extends Component {
 
 
 
-export default SendPayment;
+export default CreateInvoice;
 
 
 class SendPaymentConfirm extends Component {

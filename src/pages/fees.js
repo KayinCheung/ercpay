@@ -70,27 +70,27 @@ class Fees extends Component {
     <br/>
     <br/>
     <h4>If you are communicating by email</h4>
-    CC evidence@ercpay.com in all emails
+    CC ercpayescrow@gmail.com in all emails
     <br/>
     <br/>
     <h4>If you are communicating on Reddit</h4>
-    Create a group chat, and add /u/Arrow222
+    Create a group chat, and add <a href="https://www.reddit.com/user/Arrow222/" target="_blank">/u/Arrow222</a>
 
     <br/>
     <br/>
-    <h4>If you are communicating on Discord</h4>
-    Create a group chat, and add ERCPAY#8989
+    <h4>If you are communicating on Telegram</h4>
+    Create a group chat, and @kayin1
 
-    
     <br/>
     <br/>
     <h4>If you are communicating on other channels</h4>
-    If it has a group chat feature, let us know and we will create an account. Contact us at support@ercpay.com
+    If it has a group chat feature, let us know and we will create an account. Contact us at ercpayescrow@gmail.com
 
 
 <br/><br/>
+    <b>
     This allows us to get a full transcript of evidence and greatly accelerates the dispute resolution process.
-
+    </b>
 
 
     </div>

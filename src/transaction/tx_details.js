@@ -204,13 +204,14 @@ componentDidMount(){
         </div>
         <br/>
         <div className="buttons is-centered">
-        <Link to={buyer_profile_url} target="_blank"><p className="button is-primary">
+        <Link to={buyer_profile_url}><p className="button is-primary">
           <span className="icon">
           <i className="far fa-user"></i>
           </span>
           <span>View Buyer Profile</span>
         </p></Link>
-        <Link to={seller_profile_url} target="_blank">
+        &nbsp;
+        <Link to={seller_profile_url}>
         <p className="button is-primary">
           <span className="icon">
           <i className="far fa-user"></i>

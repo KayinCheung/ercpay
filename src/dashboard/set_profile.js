@@ -141,7 +141,7 @@ class InitializeProfile extends Component {
         <p className="control">
         <textarea className="textarea"
         id="infoinput"
-        placeholder="Optional. More about yourself. You may place contact information here, such as a link to your forum profile."></textarea>
+        placeholder="Optional. Place contact information here, such as a link to your forum profile or Telegram contact."></textarea>
         </p>
       </div>
     </div>
