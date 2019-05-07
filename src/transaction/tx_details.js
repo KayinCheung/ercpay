@@ -142,9 +142,8 @@ componentDidMount(){
       />
     }
 
-    const buyer_profile_url = `/profile/${this.state.tx['buyer']}`
-    const seller_profile_url = `/profile/${this.state.tx['seller']}`
-
+    const buyer_profile_url = `/profile?address=${this.state.tx['buyer']}`
+    const seller_profile_url = `/profile?address=${this.state.tx['seller']}`
 
     return (
       <div>

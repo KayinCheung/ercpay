@@ -4,7 +4,7 @@ import './index.css';
 import 'bulma';
 import Web3 from 'web3';
 import * as serviceWorker from './serviceWorker';
-import { BrowserRouter, Route, Switch , Link} from "react-router-dom";
+import { HashRouter     ,BrowserRouter, Route, Switch , Link} from "react-router-dom";
 
 import App from './App';
 import TransactionDetails from './transaction/tx_details'
@@ -19,6 +19,7 @@ import SendPayment from './transaction/send_payment';
 import SendPaymentConfirm from './transaction/send_payment_confirm';
 import ProfilePage from './profile/profile_page';
 import SetProfile from './dashboard/set_profile';
+import Page404 from './common/404';
 
 
 
@@ -27,6 +28,7 @@ import SetProfile from './dashboard/set_profile';
     
 ReactDOM.render(
     <BrowserRouter>
+    <Switch>
     <Route path="/" exact component={Home} />
     <Route path="/dashboard" exact component={App} />
 
@@ -43,16 +45,18 @@ ReactDOM.render(
     <Route path="/activity/confirm_payment" exact component={SendPaymentConfirm} />
     <Route path="/activity/set_profile" exact component={SetProfile} />
 
-    <Route path="/profile/:address" exact component={ProfilePage} />
+    <Route path="/profile" exact component={ProfilePage} />
+    
 
+    <Route component={Page404} />
 
-
-
+    </Switch>
 
     </BrowserRouter>
 
     , document.getElementById('root'));
 
+//<Route path="/profile/:address" exact component={ProfilePage} />
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

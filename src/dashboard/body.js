@@ -414,7 +414,7 @@ loadBuyerUserNames(){
         <WithdrawFunds funds={this.state.funds} contract={this.state.contract} address={this.state.address}/>
         <Profile profileName={this.state.profileName} profileInfo={this.state.profileInfo} address={this.state.address}/>
         <SendPayment disabled={this.state.profileName === 'Empty' ? true : false}/>
-        </div>
+          </div>
         
         <div className="column">
 
@@ -481,7 +481,7 @@ loadBuyerUserNames(){
 class Profile extends Component {
 
   render() {
-    const profile_link = `/profile/${this.props.address}`
+    const profile_link = `/profile?address=${this.props.address}`
     return (
       <div className="box">
         <p className="is-size-4 has-text-weight-semibold">Your Profile</p>

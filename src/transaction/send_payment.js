@@ -37,11 +37,9 @@ class SendPayment extends Component {
                   const contract = web3.eth.contract(constants.abi).at(constants.address)
                   const profile_contract = web3.eth.contract(constants.profile_abi).at(constants.profile_address)
                   
-
                   this.setState({
                       address: web3.eth.accounts[0],
                       profile_contract: profile_contract
-
                     })
                   setInterval(() => {
                     if (web3.eth.accounts[0] !== this.state.address) {
@@ -189,7 +187,7 @@ class SendPayment extends Component {
 
 
   render() {
-    const profile_url = `/profile/${this.state.sellerAddress}`
+    const profile_url = `/profile?address=${this.state.sellerAddress}`
     
 
     return (
@@ -370,24 +368,37 @@ componentWillReceiveProps(){
 
 SendPayment(){
 
+  this.setState({
+      txt: 'Metamask Payment Confirmation...'
+  })
+
   this.state.contract.createPayment.sendTransaction(
     this.props.sellerAddress,
     constants.escrowAddress,
     '', //notes. leave empty for now
     {
       from: this.props.address,
-      value: this.props.ethAmount*(10**18),
-      gas: 350000
+      value: this.props.ethAmount*(10**18)
     },
 
     (error, result) => {
-      console.log(result)
-      this.setState({
-          txt: 'Payment Sent'
-      })
-      setInterval(() => {
-        window.location.href = "/dashboard"
-      }, 500);
+
+      if (!error){
+        console.log(result)
+        this.setState({
+            txt: 'Payment Sent'
+        })
+        setInterval(() => {
+          window.location.href = "/dashboard"
+        }, 1000);
+      }
+
+      else{
+        this.setState({
+            txt: 'Confirm and Send Payment'
+        })
+      }
+      
     }
   )
 }
