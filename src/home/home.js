@@ -277,13 +277,13 @@ class Section5 extends Component {
                         <a className="button is-info is-outlined">
             Reddit
           </a>
-          <a className="button is-info is-outlined">
+          <a className="button is-info is-outlined" href="https://bitcointalk.org/index.php?action=profile;u=960616" target="_blank">
             Bitcointalk
           </a>
           <a className="button is-info is-outlined">
           Email
         </a>          
-        <a className="button is-info is-outlined">
+        <a className="button is-info is-outlined" href="https://www.linkedin.com/in/cheung-ka-yin-7b058180/" target="_blank">
             Linkedin
           </a>
                     </p>
