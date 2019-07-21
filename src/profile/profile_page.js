@@ -38,9 +38,14 @@ class ProfilePage extends Component {
     }
 
     componentDidMount(){
-      const address = this.props.match.params.address
+      var url_string = window.location.href;
+      var url = new URL(url_string);
+      const address = url.searchParams.get("address");
+
+
+      //const address = this.props.match.params.address
       this.setState({
-        address: this.props.match.params.address
+        address: address
       })
       if (window.ethereum) {
           const web3 = new Web3(window.ethereum);

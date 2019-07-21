@@ -80,9 +80,7 @@ class Login extends Component {
                     <h3 class="title has-text-grey">Login</h3>
                     <p class="subtitle has-text-grey">Login to access your dashboard</p>
                     <div class="box">
-                        <figure class="avatar">
-                            <img src="https://placehold.it/55x55"/>
-                        </figure>
+                        
                         <br/>
                         
                             <p className="has-text-centered">{this.state.address}</p>

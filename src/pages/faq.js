@@ -31,13 +31,18 @@ class Fees extends Component {
                         </Link>
                     </li>
                     <li data-target="pane-2" id="2" class="is-active">
-                        <a>
+                    <Link to="/info"><p>
                             <span class="icon is-small"><i class="fab fa-empire"></i></span>
                             <span>Fees & Info</span>
+                        </p>
+                        </Link>
+                    </li>
+                    <li data-target="pane-3" id="3">
+                        <a>
+                            <span class="icon is-small"><i class="fab fa-empire"></i></span>
+                            <span>FAQ</span>
                         </a>
                     </li>
-
-                    
                     
                 </ul>
             </div>
