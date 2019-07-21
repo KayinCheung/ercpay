@@ -35,11 +35,11 @@ Download the repo, run ```npm install```,  then ```npm start```
 
 # Core logic
 
-Core logic of displaying the dashboard is under ```dashboard > body.js```
+Core logic of displaying the dashboard is under ```src > dashboard > body.js```
 
-Core logic of sending escrow transactions is under ```transaction > send_payment.js```
+Core logic of sending escrow transactions is under ```src > transaction > send_payment.js```
 
-Core logic of interacting with existing transactions, including viewing the transaction, funds release, refund or opening disputes is under  ```transaction > tx_details.js```
+Core logic of interacting with existing transactions, including viewing the transaction, funds release, refund or opening disputes is under  ```src > transaction > tx_details.js```
 
 
 ## Smart Contract Changelog
