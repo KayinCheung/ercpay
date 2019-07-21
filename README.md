@@ -3,6 +3,8 @@
 # ERCPay - The Paypal Dapp
 ERCPay is the world's first payment processor built on Ethereum smart contracts. We leverage blockchain technology to offer the industry's lowest transaction fee and highest funds security.
 
+Deployed at: https://ercpay.github.io/
+
 ## To use ERCPay 
 
 Install Ethereum node software (Required):
